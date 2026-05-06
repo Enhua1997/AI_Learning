@@ -1,0 +1,533 @@
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>医疗影像患者指令管理系统 - 2026</title>
+  <script src="https://modao.cc/agent-py/static/source/js/tailwindcss.3.4.3.js"></script>
+  <script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.1.0.7.js"></script>
+  <script src="https://modao.cc/agent-py/static/source/js/echarts.min.5.4.3.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+      background-color: #0b0b0e;
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1a1a24;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #4b4b63;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #8b5cf6;
+    }
+
+    .active-protocol {
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 100%);
+      border-left: 3px solid #8b5cf6;
+    }
+
+    .glass-panel {
+      background: rgba(30, 30, 45, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: #333;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #8b5cf6;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    }
+  </style>
+</head>
+
+<body class="h-screen flex flex-col">
+  <!-- 顶部导航 -->
+  <header class="h-14 bg-[#151520] border-b border-[#2d2d3f] flex items-center justify-between px-6 shrink-0">
+    <div class="flex items-center space-x-4">
+      <div class="bg-purple-600 p-1.5 rounded-lg shadow-lg shadow-purple-900/20">
+        <iconify-icon class="text-white text-2xl" icon="solar:medical-kit-bold-duotone"></iconify-icon>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-white">患者摆位指导指令管理系统 <span class="text-purple-400 text-xs font-normal ml-2">v2.4.0</span></h1>
+        <p class="text-[10px] text-gray-500 uppercase tracking-widest">Patient Positioning Instruction System</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-8">
+      <div class="flex items-center space-x-2 text-sm text-gray-400">
+        <iconify-icon icon="solar:calendar-bold-duotone"></iconify-icon>
+        <span id="currentDate">2026年04月14日</span>
+        <span class="px-2">|</span>
+        <iconify-icon icon="solar:clock-circle-bold-duotone"></iconify-icon>
+        <span>14:30:22</span>
+      </div>
+      <div class="flex items-center bg-[#0b0b0e] rounded-full p-1 border border-[#2d2d3f]">
+        <button class="px-4 py-1 rounded-full text-xs transition-all bg-purple-600 text-white" id="langZH">中文</button>
+        <button class="px-4 py-1 rounded-full text-xs transition-all text-gray-400 hover:text-white" id="langEN">EN</button>
+      </div>
+      <div class="flex items-center space-x-3 border-l border-[#2d2d3f] pl-6">
+        <div class="text-right">
+          <p class="text-xs font-medium text-white">张美玲 医生</p>
+          <p class="text-[10px] text-purple-400">放射科主任</p>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400">
+          <iconify-icon class="text-2xl" icon="solar:user-circle-bold-duotone"></iconify-icon>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- 主内容区 -->
+  <main class="flex-1 flex overflow-hidden">
+    <!-- 左侧：协议选择区 (320px) -->
+    <aside class="w-[320px] bg-[#151520] border-r border-[#2d2d3f] flex flex-col">
+      <div class="p-4 space-y-4">
+        <div class="relative">
+          <iconify-icon class="absolute left-3 top-2.5 text-gray-500" icon="solar:magnifer-linear"></iconify-icon>
+          <input class="w-full bg-[#0b0b0e] border border-[#2d2d3f] rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-purple-500 transition-colors" placeholder="搜索协议/视图/接收器..." type="text">
+        </div>
+        <div class="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          <span>Protocol / View / Receptor</span>
+          <iconify-icon class="cursor-pointer hover:text-white" icon="solar:filter-linear"></iconify-icon>
+        </div>
+      </div>
+      <div class="flex-1 overflow-y-auto custom-scrollbar px-2 space-y-1">
+        <!-- 胸部 Protocol -->
+        <div class="mb-2">
+          <div class="flex items-center px-3 py-2 text-sm text-purple-400 font-medium group cursor-pointer">
+            <iconify-icon class="mr-2" icon="solar:alt-arrow-down-linear"></iconify-icon>
+            <iconify-icon class="mr-2 text-lg" icon="solar:chest-bold-duotone"></iconify-icon>
+            <span>胸部 (Chest)</span>
+          </div>
+          <div class="ml-4 pl-4 border-l border-[#2d2d3f] space-y-1">
+            <!-- View -->
+            <div>
+              <div class="flex items-center px-3 py-2 text-sm text-gray-300 group cursor-pointer hover:text-white">
+                <iconify-icon class="mr-2" icon="solar:alt-arrow-down-linear"></iconify-icon>
+                <span>PA (正位)</span>
+              </div>
+              <div class="ml-4 space-y-1">
+                <!-- Receptor -->
+                <div class="px-3 py-2 text-xs text-white active-protocol rounded-r-lg flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center">
+                    <iconify-icon class="mr-2 text-purple-400" icon="solar:wall-bold-duotone"></iconify-icon>
+                    <span>墙式架 (Wall Bucky)</span>
+                  </div>
+                  <iconify-icon class="text-purple-500" icon="solar:check-circle-bold"></iconify-icon>
+                </div>
+                <div class="px-3 py-2 text-xs text-gray-500 hover:text-gray-300 flex items-center cursor-pointer transition-colors">
+                  <iconify-icon class="mr-2" icon="solar:table-bold-duotone"></iconify-icon>
+                  <span>检查床 (Table Bucky)</span>
+                </div>
+              </div>
+            </div>
+            <!-- View Lat -->
+            <div>
+              <div class="flex items-center px-3 py-2 text-sm text-gray-500 group cursor-pointer hover:text-white">
+                <iconify-icon class="mr-2" icon="solar:alt-arrow-right-linear"></iconify-icon>
+                <span>Lateral (侧位)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 腹部 Protocol -->
+        <div class="mb-2">
+          <div class="flex items-center px-3 py-2 text-sm text-gray-500 font-medium group cursor-pointer hover:text-purple-400">
+            <iconify-icon class="mr-2" icon="solar:alt-arrow-right-linear"></iconify-icon>
+            <iconify-icon class="mr-2 text-lg" icon="solar:stomach-bold-duotone"></iconify-icon>
+            <span>腹部 (Abdomen)</span>
+          </div>
+        </div>
+        <!-- 骨骼 Protocol -->
+        <div class="mb-2">
+          <div class="flex items-center px-3 py-2 text-sm text-gray-500 font-medium group cursor-pointer hover:text-purple-400">
+            <iconify-icon class="mr-2" icon="solar:alt-arrow-right-linear"></iconify-icon>
+            <iconify-icon class="mr-2 text-lg" icon="solar:bone-bold-duotone"></iconify-icon>
+            <span>脊柱/骨骼 (Spine/Bone)</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- 中间：指令管理区 (380px) -->
+    <section class="w-[380px] bg-[#0f0f15] border-r border-[#2d2d3f] flex flex-col">
+      <div class="p-4 border-b border-[#2d2d3f] flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">指令列表</h2>
+          <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Instructions for Wall Bucky</p>
+        </div>
+        <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1 transition-all" onclick="addInstruction()">
+          <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+          <span>新增指令</span>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3" id="instructionList">
+        <!-- 指令卡片 1 -->
+        <div class="bg-[#1e1e2d] border-2 border-purple-500 rounded-xl p-4 cursor-pointer relative group">
+          <div class="flex justify-between items-start mb-2">
+            <div class="bg-purple-900/40 p-2 rounded-lg">
+              <iconify-icon class="text-xl text-purple-400" icon="solar:accessibility-bold-duotone"></iconify-icon>
+            </div>
+            <span class="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded uppercase font-bold tracking-wider">Active</span>
+          </div>
+          <h3 class="font-bold text-sm text-white mb-1">01. 准备吸气</h3>
+          <p class="text-xs text-gray-400 line-clamp-1 mb-3">指导患者准备深呼吸并保持不动。</p>
+          <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
+            <div class="flex items-center space-x-2">
+              <iconify-icon class="text-green-500 text-xs" icon="solar:microphone-bold"></iconify-icon>
+              <span class="text-[10px] text-gray-500 font-mono">00:03.4</span>
+            </div>
+            <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <iconify-icon class="text-gray-500 hover:text-red-500 cursor-pointer" icon="solar:trash-bin-trash-bold"></iconify-icon>
+            </div>
+          </div>
+        </div>
+        <!-- 指令卡片 2 -->
+        <div class="bg-[#1e1e2d] border border-transparent hover:border-[#2d2d3f] rounded-xl p-4 cursor-pointer relative group transition-all">
+          <div class="flex justify-between items-start mb-2">
+            <div class="bg-gray-800 p-2 rounded-lg">
+              <iconify-icon class="text-xl text-gray-400" icon="solar:stop-circle-bold-duotone"></iconify-icon>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-gray-300 mb-1">02. 请屏住呼吸</h3>
+          <p class="text-xs text-gray-500 line-clamp-1 mb-3">开始曝光前要求患者停止呼吸。</p>
+          <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
+            <div class="flex items-center space-x-2 text-gray-500">
+              <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
+              <span class="text-[10px] font-mono">00:02.1</span>
+            </div>
+          </div>
+        </div>
+        <!-- 指令卡片 3 -->
+        <div class="bg-[#1e1e2d] border border-transparent hover:border-[#2d2d3f] rounded-xl p-4 cursor-pointer relative group transition-all">
+          <div class="flex justify-between items-start mb-2">
+            <div class="bg-gray-800 p-2 rounded-lg">
+              <iconify-icon class="text-xl text-gray-400" icon="solar:refresh-circle-bold-duotone"></iconify-icon>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-gray-300 mb-1">03. 可以呼吸了</h3>
+          <p class="text-xs text-gray-500 line-clamp-1 mb-3">告知患者检查结束，可以恢复正常呼吸。</p>
+          <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
+            <div class="flex items-center space-x-2 text-gray-500">
+              <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
+              <span class="text-[10px] font-mono">00:01.8</span>
+            </div>
+          </div>
+        </div>
+        <!-- 指令卡片 4 -->
+        <div class="bg-[#1e1e2d] border border-transparent hover:border-[#2d2d3f] rounded-xl p-4 cursor-pointer relative group transition-all">
+          <div class="flex justify-between items-start mb-2">
+            <div class="bg-gray-800 p-2 rounded-lg">
+              <iconify-icon class="text-xl text-gray-400" icon="solar:user-rounded-bold-duotone"></iconify-icon>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-gray-300 mb-1">04. 请双脚并拢</h3>
+          <p class="text-xs text-gray-500 line-clamp-1 mb-3">体位摆位指示：患者双脚并拢站立。</p>
+          <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
+            <div class="flex items-center space-x-2 text-gray-500">
+              <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
+              <span class="text-[10px] font-mono">00:04.2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- 右侧：详情编辑区 (自由宽度) -->
+    <section class="flex-1 bg-[#0b0b0e] flex flex-col relative">
+      <!-- 编辑区头部 -->
+      <div class="p-6 border-b border-[#2d2d3f] flex items-center justify-between bg-[#0f0f15]/50">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-600/20 flex items-center justify-center border border-purple-500/30">
+            <iconify-icon class="text-2xl text-purple-400" icon="solar:pen-new-square-bold-duotone"></iconify-icon>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-white">指令编辑</h2>
+            <div class="flex items-center space-x-2 mt-0.5">
+              <span class="text-[10px] text-gray-500">ID: INS-2026-0041</span>
+              <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+              <span class="text-[10px] text-purple-400 font-bold uppercase tracking-widest underline decoration-purple-500/30">Chest &gt; PA &gt; Wall Bucky</span>
+            </div>
+          </div>
+        </div>
+        <button class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-2 rounded-xl border border-red-500/20 flex items-center space-x-2 text-sm transition-all">
+          <iconify-icon icon="solar:trash-bin-minimalistic-bold"></iconify-icon>
+          <span>删除此指令</span>
+        </button>
+      </div>
+      <!-- 编辑主体 -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-8">
+        <div class="max-w-4xl mx-auto space-y-8">
+          <!-- 语言环境切换 (核心功能：独立内容) -->
+          <div class="space-y-4">
+            <label class="text-sm font-semibold text-gray-400 flex items-center">
+              <iconify-icon class="mr-2 text-purple-400" icon="solar:global-bold-duotone"></iconify-icon>
+              环境语言切换 (每种语言独立录制内容)
+            </label>
+            <div class="flex flex-wrap gap-3">
+              <button class="px-5 py-2.5 rounded-xl border-2 border-purple-500 bg-purple-500/10 text-white font-medium text-sm transition-all flex items-center space-x-2">
+                <iconify-icon icon="twemoji:flag-china"></iconify-icon>
+                <span>简体中文 (CN)</span>
+              </button>
+              <button class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
+                <iconify-icon icon="twemoji:flag-united-states"></iconify-icon>
+                <span>English (US)</span>
+              </button>
+              <button class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
+                <iconify-icon icon="twemoji:flag-germany"></iconify-icon>
+                <span>Deutsch (DE)</span>
+              </button>
+              <button class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
+                <iconify-icon icon="twemoji:flag-france"></iconify-icon>
+                <span>Français (FR)</span>
+              </button>
+              <button class="w-10 h-10 rounded-xl border border-dashed border-[#2d2d3f] flex items-center justify-center text-gray-500 hover:text-white hover:border-purple-500 transition-all">
+                <iconify-icon icon="solar:add-circle-linear"></iconify-icon>
+              </button>
+            </div>
+          </div>
+          <!-- 基本信息 -->
+          <div class="grid grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-500 uppercase">指令名称</label>
+              <input class="w-full bg-[#1e1e2d] border border-[#2d2d3f] rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500/30 outline-none" type="text" value="准备吸气">
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-500 uppercase">系统标识代码</label>
+              <input class="w-full bg-[#0b0b0e] border border-[#2d2d3f] rounded-xl px-4 py-3 text-gray-500 cursor-not-allowed" disabled="" type="text" value="INS_CHEST_PRE_INH">
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-gray-500 uppercase">指令详细描述</label>
+            <textarea class="w-full bg-[#1e1e2d] border border-[#2d2d3f] rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500/30 outline-none resize-none" rows="3">此指令用于胸部摄影前，引导患者双手扶住架子，深深吸气并准备屏住。</textarea>
+          </div>
+          <!-- 录音控制 -->
+          <div class="bg-[#151520] rounded-2xl p-6 border border-[#2d2d3f] space-y-6 shadow-xl">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center">
+                <iconify-icon class="mr-2 text-red-500 animate-pulse" icon="solar:recording-bold-duotone"></iconify-icon>
+                指令录音控制
+              </h3>
+              <div class="px-3 py-1 bg-black/40 rounded-lg font-mono text-purple-400 text-sm border border-purple-500/20">
+                00:03.4 / 00:10.0
+              </div>
+            </div>
+            <!-- 波形占位 -->
+            <div class="h-16 bg-[#0b0b0e] rounded-xl border border-[#2d2d3f] relative flex items-center px-4 overflow-hidden group">
+              <div class="flex items-end space-x-1 w-full h-8 opacity-60">
+                <div class="w-1 bg-purple-500 h-2"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+                <div class="w-1 bg-purple-500 h-6"></div>
+                <div class="w-1 bg-purple-500 h-5"></div>
+                <div class="w-1 bg-purple-500 h-3"></div>
+                <div class="w-1 bg-purple-500 h-7"></div>
+                <div class="w-1 bg-purple-500 h-8"></div>
+                <div class="w-1 bg-purple-500 h-6"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+                <div class="w-1 bg-purple-500 h-5"></div>
+                <div class="w-1 bg-purple-500 h-8"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+                <div class="w-1 bg-purple-500 h-2"></div>
+                <div class="w-1 bg-purple-500 h-6"></div>
+                <div class="w-1 bg-purple-500 h-5"></div>
+                <div class="w-1 bg-purple-500 h-3"></div>
+                <div class="w-1 bg-purple-500 h-7"></div>
+                <div class="w-1 bg-purple-500 h-8"></div>
+                <div class="w-1 bg-purple-500 h-6"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+                <div class="w-1 bg-purple-500 h-5"></div>
+                <div class="w-1 bg-purple-500 h-8"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+                <div class="w-1 bg-purple-500 h-2"></div>
+                <div class="w-1 bg-purple-500 h-6"></div>
+                <div class="w-1 bg-purple-500 h-5"></div>
+                <div class="w-1 bg-purple-500 h-3"></div>
+                <div class="w-1 bg-purple-500 h-7"></div>
+                <div class="w-1 bg-purple-500 h-8"></div>
+                <div class="w-1 bg-purple-500 h-6"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+                <div class="w-1 bg-purple-500 h-5"></div>
+                <div class="w-1 bg-purple-500 h-8"></div>
+                <div class="w-1 bg-purple-500 h-4"></div>
+              </div>
+              <div class="absolute inset-0 bg-purple-600/10 hidden group-hover:flex items-center justify-center backdrop-blur-[2px] transition-all">
+                <button class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center">
+                  <iconify-icon icon="solar:play-bold"></iconify-icon>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <div class="flex space-x-4">
+                <button class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all transform active:scale-95">
+                  <iconify-icon class="text-xl" icon="solar:record-bold-duotone"></iconify-icon>
+                  <span>开始录制 (Record)</span>
+                </button>
+                <button class="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white px-6 py-2.5 rounded-xl font-bold transition-all transform active:scale-95">
+                  <iconify-icon class="text-xl" icon="solar:play-bold-duotone"></iconify-icon>
+                  <span>播放预览 (Play)</span>
+                </button>
+              </div>
+              <div class="flex items-center space-x-6">
+                <!-- 语速控制 -->
+                <div class="flex items-center space-x-3">
+                  <span class="text-xs text-gray-500 uppercase">语速 (Speed)</span>
+                  <div class="flex items-center bg-[#0b0b0e] border border-[#2d2d3f] rounded-lg p-1">
+                    <button class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white"><iconify-icon icon="solar:alt-arrow-left-bold"></iconify-icon></button>
+                    <span class="px-2 font-mono text-xs text-purple-400">1.0X</span>
+                    <button class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white"><iconify-icon icon="solar:alt-arrow-right-bold"></iconify-icon></button>
+                  </div>
+                </div>
+                <!-- 音量控制 -->
+                <div class="flex items-center space-x-3">
+                  <iconify-icon class="text-gray-500" icon="solar:volume-loud-bold-duotone"></iconify-icon>
+                  <input class="w-24 accent-purple-600" type="range">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 图片配置 -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-semibold text-gray-400 flex items-center">
+                <iconify-icon class="mr-2 text-purple-400" icon="solar:gallery-bold-duotone"></iconify-icon>
+                指导图示配置 (多图预览)
+              </label>
+              <div class="flex space-x-2">
+                <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-[#2d2d3f] transition-all flex items-center">
+                  <iconify-icon class="mr-1.5 text-blue-400" icon="solar:server-bold-duotone"></iconify-icon>
+                  系统图库
+                </button>
+                <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-[#2d2d3f] transition-all flex items-center">
+                  <iconify-icon class="mr-1.5 text-green-400" icon="solar:usb-bold-duotone"></iconify-icon>
+                  USB上传
+                </button>
+              </div>
+            </div>
+            <div class="grid grid-cols-4 gap-4">
+              <!-- 已有图片 1 -->
+              <div class="group relative aspect-video bg-[#1e1e2d] rounded-xl border border-purple-500/50 overflow-hidden shadow-lg shadow-purple-500/5">
+                <img alt="Patient chest positioning front view" class="w-full h-full object-cover" src=""C:\Users\223065504\Box\System requirement and knowledge\4.1(Gemini)+pace select\FDD&ATD&POC\ATD\Voice command\Mockup\CHEST_PA_WS_240x240.png"">
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all space-x-3">
+                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-purple-400" icon="solar:eye-bold"></iconify-icon>
+                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-red-500" icon="solar:trash-bin-trash-bold"></iconify-icon>
+                </div>
+                <div class="absolute bottom-1 left-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[8px] text-white">正面正面体位图</div>
+              </div>
+              <!-- 已有图片 2 -->
+              <div class="group relative aspect-video bg-[#1e1e2d] rounded-xl border border-[#2d2d3f] overflow-hidden">
+                <img alt="Patient chest positioning side view" class="w-full h-full object-cover opacity-60" src="https://modao.cc/agent-py/media/generated_images/2026-04-14/3ac6d22bebc644dbb497f5ddd8344e7f.jpg">
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all space-x-3">
+                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-purple-400" icon="solar:eye-bold"></iconify-icon>
+                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-red-500" icon="solar:trash-bin-trash-bold"></iconify-icon>
+                </div>
+                <div class="absolute bottom-1 left-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[8px] text-white">侧面体位图</div>
+              </div>
+              <!-- 上传按钮 -->
+              <button class="aspect-video bg-[#151520] border-2 border-dashed border-[#2d2d3f] rounded-xl flex flex-col items-center justify-center text-gray-600 hover:border-purple-500/50 hover:text-purple-400 transition-all">
+                <iconify-icon class="text-2xl mb-1" icon="solar:camera-add-bold"></iconify-icon>
+                <span class="text-[10px] font-bold uppercase tracking-widest">添加图片</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 底部批量操作栏 -->
+      <div class="h-20 bg-[#151520] border-t border-[#2d2d3f] px-8 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3">
+          <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all">
+            <iconify-icon icon="solar:copy-bold-duotone"></iconify-icon>
+            <span>Copy All</span>
+          </button>
+          <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all opacity-50 cursor-not-allowed">
+            <iconify-icon icon="solar:clipboard-list-bold-duotone"></iconify-icon>
+            <span>Paste</span>
+          </button>
+        </div>
+        <div class="flex items-center space-x-4">
+          <p class="text-xs text-gray-500 max-w-[200px] text-right">
+            修改后请点击 Apply 同步到该 Protocol 下的其他 View。
+          </p>
+          <button class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-2">
+            <iconify-icon class="text-lg" icon="solar:check-read-bold"></iconify-icon>
+            <span>Apply (应用同步)</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    // 模拟日期动态更新
+    const dateEl = document.getElementById('currentDate');
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    dateEl.textContent = `${year}年${month}月${day}日`;
+
+    // 语言切换简单逻辑
+    const btnZH = document.getElementById('langZH');
+    const btnEN = document.getElementById('langEN');
+
+    btnZH.addEventListener('click', () => {
+      btnZH.classList.add('bg-purple-600', 'text-white');
+      btnZH.classList.remove('text-gray-400');
+      btnEN.classList.remove('bg-purple-600', 'text-white');
+      btnEN.classList.add('text-gray-400');
+    });
+
+    btnEN.addEventListener('click', () => {
+      btnEN.classList.add('bg-purple-600', 'text-white');
+      btnEN.classList.remove('text-gray-400');
+      btnZH.classList.remove('bg-purple-600', 'text-white');
+      btnZH.classList.add('text-gray-400');
+    });
+
+    // 模拟新增指令
+    function addInstruction() {
+      const list = document.getElementById('instructionList');
+      const newId = (list.children.length + 1).toString().padStart(2, '0');
+      const newItem = document.createElement('div');
+      newItem.className = "bg-[#1e1e2d] border border-transparent hover:border-purple-500/50 rounded-xl p-4 cursor-pointer relative group transition-all animate-pulse";
+      newItem.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <div class="bg-gray-800 p-2 rounded-lg">
+                        <iconify-icon icon="solar:file-new-bold-duotone" class="text-xl text-gray-400"></iconify-icon>
+                    </div>
+                </div>
+                <h3 class="font-bold text-sm text-gray-300 mb-1">${newId}. 新建待编辑指令</h3>
+                <p class="text-xs text-gray-500 line-clamp-1 mb-3">点击右侧开始配置详情及录音。</p>
+                <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
+                    <div class="flex items-center space-x-2 text-gray-500">
+                        <iconify-icon icon="solar:microphone-bold" class="text-xs"></iconify-icon>
+                        <span class="text-[10px] font-mono">--:--</span>
+                    </div>
+                </div>
+            `;
+      list.appendChild(newItem);
+      setTimeout(() => newItem.classList.remove('animate-pulse'), 1000);
+    }
+  </script>
+
+</body>
+
+</html>

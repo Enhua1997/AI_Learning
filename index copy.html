@@ -1,9 +1,9 @@
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>医疗影像患者指令管理系统 - 2026</title>
+  <title>Medical Imaging Patient Instruction Management System - 2026</title>
   <script src="https://modao.cc/agent-py/static/source/js/tailwindcss.3.4.3.js"></script>
   <script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.1.0.7.js"></script>
   <script src="https://modao.cc/agent-py/static/source/js/echarts.min.5.4.3.js"></script>
@@ -65,125 +65,109 @@
 </head>
 
 <body class="h-screen flex flex-col">
-  <!-- 顶部导航 -->
+  <!-- Top Navigation -->
   <header class="h-14 bg-[#151520] border-b border-[#2d2d3f] flex items-center justify-between px-6 shrink-0">
     <div class="flex items-center space-x-4">
       <div class="bg-purple-600 p-1.5 rounded-lg shadow-lg shadow-purple-900/20">
         <iconify-icon class="text-white text-2xl" icon="solar:medical-kit-bold-duotone"></iconify-icon>
       </div>
       <div>
-        <h1 class="text-lg font-bold tracking-tight text-white">患者摆位指导指令管理系统 <span class="text-purple-400 text-xs font-normal ml-2">v2.4.0</span></h1>
+        <h1 class="text-lg font-bold tracking-tight text-white">Patient Positioning Instruction Management System <span class="text-purple-400 text-xs font-normal ml-2">v2.4.0</span></h1>
         <p class="text-[10px] text-gray-500 uppercase tracking-widest">Patient Positioning Instruction System</p>
       </div>
     </div>
-    <div class="flex items-center space-x-8">
+    <div class="flex items-center space-x-4">
       <div class="flex items-center space-x-2 text-sm text-gray-400">
         <iconify-icon icon="solar:calendar-bold-duotone"></iconify-icon>
-        <span id="currentDate">2026年04月14日</span>
-        <span class="px-2">|</span>
-        <iconify-icon icon="solar:clock-circle-bold-duotone"></iconify-icon>
-        <span>14:30:22</span>
-      </div>
-      <div class="flex items-center bg-[#0b0b0e] rounded-full p-1 border border-[#2d2d3f]">
-        <button class="px-4 py-1 rounded-full text-xs transition-all bg-purple-600 text-white" id="langZH">中文</button>
-        <button class="px-4 py-1 rounded-full text-xs transition-all text-gray-400 hover:text-white" id="langEN">EN</button>
-      </div>
-      <div class="flex items-center space-x-3 border-l border-[#2d2d3f] pl-6">
-        <div class="text-right">
-          <p class="text-xs font-medium text-white">张美玲 医生</p>
-          <p class="text-[10px] text-purple-400">放射科主任</p>
-        </div>
-        <div class="w-9 h-9 rounded-full bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400">
-          <iconify-icon class="text-2xl" icon="solar:user-circle-bold-duotone"></iconify-icon>
-        </div>
+        <span id="currentDate">April 14, 2026</span>
       </div>
     </div>
   </header>
-  <!-- 主内容区 -->
+  <!-- Main Content Area -->
   <main class="flex-1 flex overflow-hidden">
-    <!-- 左侧：协议选择区 (320px) -->
+    <!-- Left: Protocol Selection Area (320px) -->
     <aside class="w-[320px] bg-[#151520] border-r border-[#2d2d3f] flex flex-col">
       <div class="p-4 space-y-4">
         <div class="relative">
           <iconify-icon class="absolute left-3 top-2.5 text-gray-500" icon="solar:magnifer-linear"></iconify-icon>
-          <input class="w-full bg-[#0b0b0e] border border-[#2d2d3f] rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-purple-500 transition-colors" placeholder="搜索协议/视图/接收器..." type="text">
+          <input class="w-full bg-[#0b0b0e] border border-[#2d2d3f] rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-purple-500 transition-colors" placeholder="Search protocols/views/receptors..." type="text">
         </div>
         <div class="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider">
           <span>Protocol / View / Receptor</span>
           <iconify-icon class="cursor-pointer hover:text-white" icon="solar:filter-linear"></iconify-icon>
         </div>
       </div>
-      <div class="flex-1 overflow-y-auto custom-scrollbar px-2 space-y-1">
-        <!-- 胸部 Protocol -->
+      <div id="protocolTree" class="flex-1 overflow-y-auto custom-scrollbar px-2 space-y-1">
+        <!-- Chest Protocol -->
         <div class="mb-2">
-          <div class="flex items-center px-3 py-2 text-sm text-purple-400 font-medium group cursor-pointer">
+          <div class="flex items-center px-3 py-2 text-sm text-purple-400 font-medium group cursor-pointer" data-type="protocol" data-protocol="Chest" data-view="PA">
             <iconify-icon class="mr-2" icon="solar:alt-arrow-down-linear"></iconify-icon>
             <iconify-icon class="mr-2 text-lg" icon="solar:chest-bold-duotone"></iconify-icon>
-            <span>胸部 (Chest)</span>
+            <span>Chest (Chest)</span>
           </div>
           <div class="ml-4 pl-4 border-l border-[#2d2d3f] space-y-1">
             <!-- View -->
             <div>
-              <div class="flex items-center px-3 py-2 text-sm text-gray-300 group cursor-pointer hover:text-white">
+              <div class="flex items-center px-3 py-2 text-sm text-gray-300 group cursor-pointer hover:text-white" data-type="view" data-protocol="Chest" data-view="PA">
                 <iconify-icon class="mr-2" icon="solar:alt-arrow-down-linear"></iconify-icon>
-                <span>PA (正位)</span>
+                <span>PA (Posteroanterior)</span>
               </div>
               <div class="ml-4 space-y-1">
                 <!-- Receptor -->
-                <div class="px-3 py-2 text-xs text-white active-protocol rounded-r-lg flex items-center justify-between cursor-pointer">
+                <div class="px-3 py-2 text-xs text-white active-protocol rounded-r-lg flex items-center justify-between cursor-pointer" data-type="receptor" data-protocol="Chest" data-view="PA" data-receptor="Wallstand">
                   <div class="flex items-center">
                     <iconify-icon class="mr-2 text-purple-400" icon="solar:wall-bold-duotone"></iconify-icon>
-                    <span>墙式架 (Wall Bucky)</span>
+                    <span>Wallstand</span>
                   </div>
                   <iconify-icon class="text-purple-500" icon="solar:check-circle-bold"></iconify-icon>
                 </div>
-                <div class="px-3 py-2 text-xs text-gray-500 hover:text-gray-300 flex items-center cursor-pointer transition-colors">
+                <div class="px-3 py-2 text-xs text-gray-500 hover:text-gray-300 flex items-center cursor-pointer transition-colors" data-type="receptor" data-protocol="Chest" data-view="PA" data-receptor="Table">
                   <iconify-icon class="mr-2" icon="solar:table-bold-duotone"></iconify-icon>
-                  <span>检查床 (Table Bucky)</span>
+                  <span>Table</span>
                 </div>
               </div>
             </div>
             <!-- View Lat -->
             <div>
-              <div class="flex items-center px-3 py-2 text-sm text-gray-500 group cursor-pointer hover:text-white">
+              <div class="flex items-center px-3 py-2 text-sm text-gray-500 group cursor-pointer hover:text-white" data-type="view" data-protocol="Chest" data-view="Lateral">
                 <iconify-icon class="mr-2" icon="solar:alt-arrow-right-linear"></iconify-icon>
-                <span>Lateral (侧位)</span>
+                <span>Lateral (Lateral)</span>
               </div>
             </div>
           </div>
         </div>
-        <!-- 腹部 Protocol -->
+        <!-- Abdomen Protocol -->
         <div class="mb-2">
-          <div class="flex items-center px-3 py-2 text-sm text-gray-500 font-medium group cursor-pointer hover:text-purple-400">
+          <div class="flex items-center px-3 py-2 text-sm text-gray-500 font-medium group cursor-pointer hover:text-purple-400" data-type="protocol" data-protocol="Abdomen" data-view="Abdomen">
             <iconify-icon class="mr-2" icon="solar:alt-arrow-right-linear"></iconify-icon>
             <iconify-icon class="mr-2 text-lg" icon="solar:stomach-bold-duotone"></iconify-icon>
-            <span>腹部 (Abdomen)</span>
+            <span>Abdomen (Abdomen)</span>
           </div>
         </div>
-        <!-- 骨骼 Protocol -->
+        <!-- Bone Protocol -->
         <div class="mb-2">
-          <div class="flex items-center px-3 py-2 text-sm text-gray-500 font-medium group cursor-pointer hover:text-purple-400">
+          <div class="flex items-center px-3 py-2 text-sm text-gray-500 font-medium group cursor-pointer hover:text-purple-400" data-type="protocol" data-protocol="Spine/Bone" data-view="Spine/Bone">
             <iconify-icon class="mr-2" icon="solar:alt-arrow-right-linear"></iconify-icon>
             <iconify-icon class="mr-2 text-lg" icon="solar:bone-bold-duotone"></iconify-icon>
-            <span>脊柱/骨骼 (Spine/Bone)</span>
+            <span>Spine/Bone (Spine/Bone)</span>
           </div>
         </div>
       </div>
     </aside>
-    <!-- 中间：指令管理区 (380px) -->
+    <!-- Middle: Instruction Management Area (380px) -->
     <section class="w-[380px] bg-[#0f0f15] border-r border-[#2d2d3f] flex flex-col">
       <div class="p-4 border-b border-[#2d2d3f] flex items-center justify-between">
         <div>
-          <h2 class="text-base font-bold text-white">指令列表</h2>
-          <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Instructions for Wall Bucky</p>
+        <h2 class="text-base font-bold text-white">Instruction List</h2>
+          <!-- <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Instructions for Wallstand</p> -->
         </div>
         <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1 transition-all" onclick="addInstruction()">
           <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
-          <span>新增指令</span>
+          <span>Add Instruction</span>
         </button>
       </div>
       <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3" id="instructionList">
-        <!-- 指令卡片 1 -->
+        <!-- Instruction Card 1 -->
         <div class="bg-[#1e1e2d] border-2 border-purple-500 rounded-xl p-4 cursor-pointer relative group">
           <div class="flex justify-between items-start mb-2">
             <div class="bg-purple-900/40 p-2 rounded-lg">
@@ -191,8 +175,8 @@
             </div>
             <span class="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded uppercase font-bold tracking-wider">Active</span>
           </div>
-          <h3 class="font-bold text-sm text-white mb-1">01. 准备吸气</h3>
-          <p class="text-xs text-gray-400 line-clamp-1 mb-3">指导患者准备深呼吸并保持不动。</p>
+          <h3 class="font-bold text-sm text-white mb-1">01. Prepare to Inhale</h3>
+          <p class="text-xs text-gray-400 line-clamp-1 mb-3">Guide the patient to prepare for deep breathing and remain still.</p>
           <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
             <div class="flex items-center space-x-2">
               <iconify-icon class="text-green-500 text-xs" icon="solar:microphone-bold"></iconify-icon>
@@ -203,15 +187,15 @@
             </div>
           </div>
         </div>
-        <!-- 指令卡片 2 -->
+        <!-- Instruction Card 2 -->
         <div class="bg-[#1e1e2d] border border-transparent hover:border-[#2d2d3f] rounded-xl p-4 cursor-pointer relative group transition-all">
           <div class="flex justify-between items-start mb-2">
             <div class="bg-gray-800 p-2 rounded-lg">
               <iconify-icon class="text-xl text-gray-400" icon="solar:stop-circle-bold-duotone"></iconify-icon>
             </div>
           </div>
-          <h3 class="font-bold text-sm text-gray-300 mb-1">02. 请屏住呼吸</h3>
-          <p class="text-xs text-gray-500 line-clamp-1 mb-3">开始曝光前要求患者停止呼吸。</p>
+          <h3 class="font-bold text-sm text-gray-300 mb-1">02. Please Hold Your Breath</h3>
+          <p class="text-xs text-gray-500 line-clamp-1 mb-3">Ask the patient to stop breathing before exposure begins.</p>
           <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
             <div class="flex items-center space-x-2 text-gray-500">
               <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
@@ -219,15 +203,15 @@
             </div>
           </div>
         </div>
-        <!-- 指令卡片 3 -->
+        <!-- Instruction Card 3 -->
         <div class="bg-[#1e1e2d] border border-transparent hover:border-[#2d2d3f] rounded-xl p-4 cursor-pointer relative group transition-all">
           <div class="flex justify-between items-start mb-2">
             <div class="bg-gray-800 p-2 rounded-lg">
               <iconify-icon class="text-xl text-gray-400" icon="solar:refresh-circle-bold-duotone"></iconify-icon>
             </div>
           </div>
-          <h3 class="font-bold text-sm text-gray-300 mb-1">03. 可以呼吸了</h3>
-          <p class="text-xs text-gray-500 line-clamp-1 mb-3">告知患者检查结束，可以恢复正常呼吸。</p>
+          <h3 class="font-bold text-sm text-gray-300 mb-1">03. You Can Breathe Now</h3>
+          <p class="text-xs text-gray-500 line-clamp-1 mb-3">Inform the patient that the examination is over and they can resume normal breathing.</p>
           <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
             <div class="flex items-center space-x-2 text-gray-500">
               <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
@@ -235,15 +219,15 @@
             </div>
           </div>
         </div>
-        <!-- 指令卡片 4 -->
+        <!-- Instruction Card 4 -->
         <div class="bg-[#1e1e2d] border border-transparent hover:border-[#2d2d3f] rounded-xl p-4 cursor-pointer relative group transition-all">
           <div class="flex justify-between items-start mb-2">
             <div class="bg-gray-800 p-2 rounded-lg">
               <iconify-icon class="text-xl text-gray-400" icon="solar:user-rounded-bold-duotone"></iconify-icon>
             </div>
           </div>
-          <h3 class="font-bold text-sm text-gray-300 mb-1">04. 请双脚并拢</h3>
-          <p class="text-xs text-gray-500 line-clamp-1 mb-3">体位摆位指示：患者双脚并拢站立。</p>
+          <h3 class="font-bold text-sm text-gray-300 mb-1">04. Please Stand with Feet Together</h3>
+          <p class="text-xs text-gray-500 line-clamp-1 mb-3">Positioning instruction: Patient stands with feet together.</p>
           <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
             <div class="flex items-center space-x-2 text-gray-500">
               <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
@@ -253,86 +237,87 @@
         </div>
       </div>
     </section>
-    <!-- 右侧：详情编辑区 (自由宽度) -->
+    <!-- Right: Detail Editing Area (Flexible Width) -->
     <section class="flex-1 bg-[#0b0b0e] flex flex-col relative">
-      <!-- 编辑区头部 -->
+      <!-- Editing Area Header -->
       <div class="p-6 border-b border-[#2d2d3f] flex items-center justify-between bg-[#0f0f15]/50">
         <div class="flex items-center space-x-4">
           <div class="w-12 h-12 rounded-xl bg-purple-600/20 flex items-center justify-center border border-purple-500/30">
             <iconify-icon class="text-2xl text-purple-400" icon="solar:pen-new-square-bold-duotone"></iconify-icon>
           </div>
           <div>
-            <h2 class="text-xl font-bold text-white">指令编辑</h2>
+            <h2 class="text-xl font-bold text-white">Instruction Editor</h2>
             <div class="flex items-center space-x-2 mt-0.5">
               <span class="text-[10px] text-gray-500">ID: INS-2026-0041</span>
               <span class="w-1 h-1 rounded-full bg-gray-700"></span>
-              <span class="text-[10px] text-purple-400 font-bold uppercase tracking-widest underline decoration-purple-500/30">Chest &gt; PA &gt; Wall Bucky</span>
+              <span id="headerPath" class="text-[10px] text-purple-400 font-bold uppercase tracking-widest underline decoration-purple-500/30">Chest &gt; PA &gt; Wallstand</span>
             </div>
           </div>
         </div>
-        <button class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-2 rounded-xl border border-red-500/20 flex items-center space-x-2 text-sm transition-all">
+        <button onclick="deleteSelectedInstruction()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-2 rounded-xl border border-red-500/20 flex items-center space-x-2 text-sm transition-all">
           <iconify-icon icon="solar:trash-bin-minimalistic-bold"></iconify-icon>
-          <span>删除此指令</span>
+          <span>Delete This Instruction</span>
         </button>
       </div>
-      <!-- 编辑主体 -->
+      <!-- Editing Main Body -->
       <div class="flex-1 overflow-y-auto custom-scrollbar p-8">
         <div class="max-w-4xl mx-auto space-y-8">
-          <!-- 语言环境切换 (核心功能：独立内容) -->
+          <!-- Language Environment Switch (Core Feature: Independent Content) -->
           <div class="space-y-4">
             <label class="text-sm font-semibold text-gray-400 flex items-center">
               <iconify-icon class="mr-2 text-purple-400" icon="solar:global-bold-duotone"></iconify-icon>
-              环境语言切换 (每种语言独立录制内容)
+              Language Environment Switch (Independent Content Recording for Each Language)
             </label>
-            <div class="flex flex-wrap gap-3">
-              <button class="px-5 py-2.5 rounded-xl border-2 border-purple-500 bg-purple-500/10 text-white font-medium text-sm transition-all flex items-center space-x-2">
+            <div id="languageSwitcher" class="flex flex-wrap gap-3">
+              <button data-lang="cn" class="px-5 py-2.5 rounded-xl border-2 border-purple-500 bg-purple-500/10 text-white font-medium text-sm transition-all flex items-center space-x-2">
                 <iconify-icon icon="twemoji:flag-china"></iconify-icon>
-                <span>简体中文 (CN)</span>
+                <span>Simplified Chinese (CN)</span>
               </button>
-              <button class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
+              <button data-lang="us" class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
                 <iconify-icon icon="twemoji:flag-united-states"></iconify-icon>
                 <span>English (US)</span>
               </button>
-              <button class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
+              <button data-lang="de" class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
                 <iconify-icon icon="twemoji:flag-germany"></iconify-icon>
                 <span>Deutsch (DE)</span>
               </button>
-              <button class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
+              <button data-lang="fr" class="px-5 py-2.5 rounded-xl border border-[#2d2d3f] bg-[#1e1e2d] text-gray-400 hover:text-white hover:border-gray-500 font-medium text-sm transition-all flex items-center space-x-2">
                 <iconify-icon icon="twemoji:flag-france"></iconify-icon>
-                <span>Français (FR)</span>
+                <span>French (FR)</span>
               </button>
               <button class="w-10 h-10 rounded-xl border border-dashed border-[#2d2d3f] flex items-center justify-center text-gray-500 hover:text-white hover:border-purple-500 transition-all">
                 <iconify-icon icon="solar:add-circle-linear"></iconify-icon>
               </button>
             </div>
+            <p id="voiceLanguageNote" class="text-xs text-gray-500">Selected voice language: English (US)</p>
           </div>
-          <!-- 基本信息 -->
+          <!-- Basic Information -->
           <div class="grid grid-cols-2 gap-6">
             <div class="space-y-2">
-              <label class="text-xs font-semibold text-gray-500 uppercase">指令名称</label>
-              <input class="w-full bg-[#1e1e2d] border border-[#2d2d3f] rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500/30 outline-none" type="text" value="准备吸气">
+              <label class="text-xs font-semibold text-gray-500 uppercase">Instruction Name</label>
+              <input id="instructionNameInput" class="w-full bg-[#1e1e2d] border border-[#2d2d3f] rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500/30 outline-none" type="text" value="Prepare to Inhale">
             </div>
             <div class="space-y-2">
-              <label class="text-xs font-semibold text-gray-500 uppercase">系统标识代码</label>
-              <input class="w-full bg-[#0b0b0e] border border-[#2d2d3f] rounded-xl px-4 py-3 text-gray-500 cursor-not-allowed" disabled="" type="text" value="INS_CHEST_PRE_INH">
+              <label class="text-xs font-semibold text-gray-500 uppercase">System Identification Code</label>
+              <input id="instructionCodeInput" class="w-full bg-[#0b0b0e] border border-[#2d2d3f] rounded-xl px-4 py-3 text-gray-500 cursor-not-allowed" disabled="" type="text" value="INS_CHEST_PRE_INH">
             </div>
           </div>
           <div class="space-y-2">
-            <label class="text-xs font-semibold text-gray-500 uppercase">指令详细描述</label>
-            <textarea class="w-full bg-[#1e1e2d] border border-[#2d2d3f] rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500/30 outline-none resize-none" rows="3">此指令用于胸部摄影前，引导患者双手扶住架子，深深吸气并准备屏住。</textarea>
+              <label class="text-xs font-semibold text-gray-500 uppercase">Instruction Detailed Description</label>
+            <textarea id="instructionDescriptionInput" class="w-full bg-[#1e1e2d] border border-[#2d2d3f] rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500/30 outline-none resize-none" rows="3">This instruction is used before chest radiography to guide the patient to hold the stand with both hands, take a deep breath, and prepare to hold it.</textarea>
           </div>
-          <!-- 录音控制 -->
+          <!-- Recording Control -->
           <div class="bg-[#151520] rounded-2xl p-6 border border-[#2d2d3f] space-y-6 shadow-xl">
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-bold text-white flex items-center">
                 <iconify-icon class="mr-2 text-red-500 animate-pulse" icon="solar:recording-bold-duotone"></iconify-icon>
-                指令录音控制
+                Instruction Recording Control
               </h3>
               <div class="px-3 py-1 bg-black/40 rounded-lg font-mono text-purple-400 text-sm border border-purple-500/20">
                 00:03.4 / 00:10.0
               </div>
             </div>
-            <!-- 波形占位 -->
+            <!-- Waveform Placeholder -->
             <div class="h-16 bg-[#0b0b0e] rounded-xl border border-[#2d2d3f] relative flex items-center px-4 overflow-hidden group">
               <div class="flex items-end space-x-1 w-full h-8 opacity-60">
                 <div class="w-1 bg-purple-500 h-2"></div>
@@ -377,87 +362,104 @@
               </div>
             </div>
             <div class="flex items-center justify-between pt-2">
-              <div class="flex space-x-4">
-                <button class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all transform active:scale-95">
-                  <iconify-icon class="text-xl" icon="solar:record-bold-duotone"></iconify-icon>
-                  <span>开始录制 (Record)</span>
+              <div class="flex space-x-3">
+                <button class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold transition-all transform active:scale-95">
+                  <iconify-icon class="text-lg" icon="solar:record-bold-duotone"></iconify-icon>
+                  <span>Record</span>
                 </button>
-                <button class="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white px-6 py-2.5 rounded-xl font-bold transition-all transform active:scale-95">
-                  <iconify-icon class="text-xl" icon="solar:play-bold-duotone"></iconify-icon>
-                  <span>播放预览 (Play)</span>
+                <button class="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-xl font-semibold transition-all transform active:scale-95">
+                  <iconify-icon class="text-lg" icon="solar:play-bold-duotone"></iconify-icon>
+                  <span>Play</span>
                 </button>
               </div>
-              <div class="flex items-center space-x-6">
-                <!-- 语速控制 -->
-                <div class="flex items-center space-x-3">
-                  <span class="text-xs text-gray-500 uppercase">语速 (Speed)</span>
+              <div class="flex items-center space-x-4">
+                <!-- Speed Control -->
+                <div class="flex items-center space-x-2">
+                  <span class="text-[10px] text-gray-500 uppercase">Speed</span>
                   <div class="flex items-center bg-[#0b0b0e] border border-[#2d2d3f] rounded-lg p-1">
                     <button class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white"><iconify-icon icon="solar:alt-arrow-left-bold"></iconify-icon></button>
-                    <span class="px-2 font-mono text-xs text-purple-400">1.0X</span>
+                    <span class="px-2 font-mono text-[10px] text-purple-400">1.0X</span>
                     <button class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white"><iconify-icon icon="solar:alt-arrow-right-bold"></iconify-icon></button>
                   </div>
                 </div>
-                <!-- 音量控制 -->
-                <div class="flex items-center space-x-3">
+                <!-- Volume Control -->
+                <div class="flex items-center space-x-2">
                   <iconify-icon class="text-gray-500" icon="solar:volume-loud-bold-duotone"></iconify-icon>
-                  <input class="w-24 accent-purple-600" type="range">
+                  <input class="w-20 accent-purple-600" type="range">
                 </div>
+
               </div>
             </div>
           </div>
-          <!-- 图片配置 -->
+          <!-- Image Configuration -->
           <div class="space-y-4">
             <div class="flex items-center justify-between">
               <label class="text-sm font-semibold text-gray-400 flex items-center">
                 <iconify-icon class="mr-2 text-purple-400" icon="solar:gallery-bold-duotone"></iconify-icon>
-                指导图示配置 (多图预览)
+                Guidance Illustration Configuration (Multi-Image Preview)
               </label>
-              <div class="flex space-x-2">
-                <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-[#2d2d3f] transition-all flex items-center">
-                  <iconify-icon class="mr-1.5 text-blue-400" icon="solar:server-bold-duotone"></iconify-icon>
-                  系统图库
-                </button>
-                <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-[#2d2d3f] transition-all flex items-center">
-                  <iconify-icon class="mr-1.5 text-green-400" icon="solar:usb-bold-duotone"></iconify-icon>
-                  USB上传
-                </button>
-              </div>
             </div>
-            <div class="grid grid-cols-4 gap-4">
-              <!-- 已有图片 1 -->
-              <div class="group relative aspect-video bg-[#1e1e2d] rounded-xl border border-purple-500/50 overflow-hidden shadow-lg shadow-purple-500/5">
-                <img alt="Patient chest positioning front view" class="w-full h-full object-cover" src=""C:\Users\223065504\Box\System requirement and knowledge\4.1(Gemini)+pace select\FDD&ATD&POC\ATD\Voice command\Mockup\CHEST_PA_WS_240x240.png"">
-                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all space-x-3">
-                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-purple-400" icon="solar:eye-bold"></iconify-icon>
-                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-red-500" icon="solar:trash-bin-trash-bold"></iconify-icon>
-                </div>
-                <div class="absolute bottom-1 left-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[8px] text-white">正面正面体位图</div>
-              </div>
-              <!-- 已有图片 2 -->
-              <div class="group relative aspect-video bg-[#1e1e2d] rounded-xl border border-[#2d2d3f] overflow-hidden">
-                <img alt="Patient chest positioning side view" class="w-full h-full object-cover opacity-60" src="https://modao.cc/agent-py/media/generated_images/2026-04-14/3ac6d22bebc644dbb497f5ddd8344e7f.jpg">
-                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all space-x-3">
-                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-purple-400" icon="solar:eye-bold"></iconify-icon>
-                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-red-500" icon="solar:trash-bin-trash-bold"></iconify-icon>
-                </div>
-                <div class="absolute bottom-1 left-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[8px] text-white">侧面体位图</div>
-              </div>
-              <!-- 上传按钮 -->
-              <button class="aspect-video bg-[#151520] border-2 border-dashed border-[#2d2d3f] rounded-xl flex flex-col items-center justify-center text-gray-600 hover:border-purple-500/50 hover:text-purple-400 transition-all">
-                <iconify-icon class="text-2xl mb-1" icon="solar:camera-add-bold"></iconify-icon>
-                <span class="text-[10px] font-bold uppercase tracking-widest">添加图片</span>
-              </button>
+            <p class="text-xs text-gray-500">Note: Each instruction can only have one image.</p>
+            <div id="imageContainer" class="inline-block">
+            <!-- Empty State -->
+            <div id="imageEmptyState" class="w-[320px] h-[200px] flex flex-col items-center justify-center cursor-pointer bg-[#1e1e2d] rounded-lg border border-dashed border-[#2d2d3f] hover:border-purple-500/50 hover:bg-purple-600/5 transition-all">
+                <iconify-icon class="text-4xl mb-2 text-gray-500 hover:text-purple-400" icon="solar:camera-add-bold"></iconify-icon>
+                <span class="text-sm font-semibold text-gray-500 hover:text-purple-400">Add Image</span>
             </div>
+            <!-- Filled State -->
+            <div id="imageFilledState" class="hidden flex flex-col items-start w-fit">
+            <!-- ✅ 图片（决定整体宽度） -->
+             <img id="instructionImage" class="block max-w-[320px] max-h-[200px] object-contain object-left rounded-lg border border-[#2d2d3f]" />
+            <!-- ✅ 按钮（和图片一模一样宽） -->
+             <div class="mt-2 flex justify-between w-full gap-2">
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 rounded text-white text-sm" id="replaceImageBtn">
+            <iconify-icon class="text-lg" icon="solar:refresh-bold"></iconify-icon>
+            <span>Replace</span>
+            </button>
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-red-600 hover:bg-red-700 rounded text-white text-sm" id="deleteImageBtn">
+            <iconify-icon class="text-lg" icon="solar:trash-bin-trash-bold"></iconify-icon>
+            <span>Delete</span>
+            </button>
+            </div>
+            </div>
+            </div>
+
+              <!-- Empty State -->
+               <!-- <div id="imageContainer" class="relative inline-block bg-[#1e1e2d] rounded-xl border-2 border-dashed border-[#2d2d3f] overflow-hidden shadow-lg">
+              <div id="imageEmptyState" class="w-full h-full flex flex-col items-center justify-center cursor-pointer group hover:border-purple-500/50 hover:bg-purple-600/5 transition-all">
+                <iconify-icon class="text-4xl mb-2 text-gray-500 group-hover:text-purple-400" icon="solar:camera-add-bold"></iconify-icon>
+                <span class="text-sm font-semibold text-gray-500 group-hover:text-purple-400">Add Image</span>
+              </div>
+              
+              <div id="imageFilledState" class="hidden w-full h-full relative group">
+                <img id="instructionImage" class="w-full h-full object-contain object-left" />
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all space-x-3">
+                  <button type="button" class="p-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white" id="replaceImageBtn" title="Replace image">
+                    <iconify-icon class="text-2xl" icon="solar:refresh-bold"></iconify-icon>
+                  </button>
+                  <button type="button" class="p-2 bg-red-600 hover:bg-red-700 rounded-lg text-white" id="deleteImageBtn" title="Delete image">
+                    <iconify-icon class="text-2xl" icon="solar:trash-bin-trash-bold"></iconify-icon>
+                  </button>
+                </div>
+              </div>
+            </div> -->
+            <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
           </div>
         </div>
       </div>
-      <!-- 底部批量操作栏 -->
+      <!-- Bottom Batch Operation Bar -->
       <div class="h-20 bg-[#151520] border-t border-[#2d2d3f] px-8 flex items-center justify-between shrink-0">
         <div class="flex items-center space-x-3">
           <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all">
             <iconify-icon icon="solar:copy-bold-duotone"></iconify-icon>
             <span>Copy All</span>
           </button>
+          
+        <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all">
+            <iconify-icon icon="solar:copy-outline"></iconify-icon>
+            <span>Copy Current Instruction</span>
+            </button>
+
           <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all opacity-50 cursor-not-allowed">
             <iconify-icon icon="solar:clipboard-list-bold-duotone"></iconify-icon>
             <span>Paste</span>
@@ -465,67 +467,1016 @@
         </div>
         <div class="flex items-center space-x-4">
           <p class="text-xs text-gray-500 max-w-[200px] text-right">
-            修改后请点击 Apply 同步到该 Protocol 下的其他 View。
+            After modification, please click Apply to sync to other Views under this Protocol.
           </p>
-          <button class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-2">
-            <iconify-icon class="text-lg" icon="solar:check-read-bold"></iconify-icon>
-            <span>Apply (应用同步)</span>
-          </button>
+          <div class="relative flex items-center" id="applyDropdownWrapper">
+            <button id="applyMainBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-2">
+              <iconify-icon class="text-lg" icon="solar:check-read-bold"></iconify-icon>
+              <span>Apply (Apply Sync)</span>
+            </button>
+            <button id="applyToggleBtn" type="button" class="ml-2 w-11 h-11 rounded-xl border border-[#2d2d3f] bg-[#151520] text-white hover:bg-[#1f1f2b] transition-all">
+              <iconify-icon class="text-lg" icon="solar:angle-down-bold"></iconify-icon>
+            </button>
+            <div id="applyDropdownMenu" class="hidden absolute right-0 top-full mt-2 w-72 bg-[#0b0b0e] border border-[#2d2d3f] rounded-3xl shadow-2xl shadow-black/40 z-50 overflow-hidden">
+              <button type="button" data-apply-mode="sameView" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-purple-500/10 transition-all">Apply to same view</button>
+              <button type="button" data-apply-mode="sameProtocol" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-purple-500/10 transition-all">Apply to same protocol</button>
+              <button type="button" data-apply-mode="custom" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-purple-500/10 transition-all border-t border-[#2d2d3f]">Select custom targets...</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <div id="applyTargetModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4 py-6">
+    <div class="bg-[#0b0b0e] rounded-3xl w-full max-w-3xl shadow-2xl shadow-black/70 border border-[#2d2d3f] overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-[#2d2d3f]">
+        <div>
+          <h3 class="text-white text-lg font-bold">Custom Apply Targets</h3>
+          <p class="text-sm text-gray-400">Choose target views or receptors to apply the current instruction to.</p>
+        </div>
+        <button id="closeApplyModalBtn" type="button" class="text-gray-400 hover:text-white">
+          <iconify-icon icon="solar:close-bold"></iconify-icon>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+        <div class="flex items-center justify-between text-sm text-gray-400">
+          <span>Target tree</span>
+          <button id="selectAllTargetsBtn" type="button" class="text-purple-400 hover:text-white text-xs">Select all</button>
+        </div>
+        <div id="applyTargetTree" class="space-y-3 text-gray-200"></div>
+      </div>
+      <div class="px-6 py-4 border-t border-[#2d2d3f] flex items-center justify-end gap-3">
+        <button id="cancelApplyModalBtn" type="button" class="px-4 py-2 bg-[#1f1f2b] text-gray-300 rounded-xl hover:bg-[#272735]">Cancel</button>
+        <button id="confirmApplyModalBtn" type="button" class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-500">Apply Selected</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // 模拟日期动态更新
-    const dateEl = document.getElementById('currentDate');
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    dateEl.textContent = `${year}年${month}月${day}日`;
+    const protocolTree = document.getElementById('protocolTree');
+    const instructionListEl = document.getElementById('instructionList');
+    const headerPathEl = document.getElementById('headerPath');
+    const languageNoteEl = document.getElementById('voiceLanguageNote');
+    const languageButtons = document.querySelectorAll('[data-lang]');
+    const instructionNameInput = document.getElementById('instructionNameInput');
+    const instructionDescriptionInput = document.getElementById('instructionDescriptionInput');
+    const instructionCodeInput = document.getElementById('instructionCodeInput');
+    const imageFileInput = document.getElementById('imageFileInput');
+    const imageContainer = document.getElementById('imageContainer');
+    const imageEmptyState = document.getElementById('imageEmptyState');
+    const imageFilledState = document.getElementById('imageFilledState');
+    const instructionImage = document.getElementById('instructionImage');
+    const applyDropdownWrapper = document.getElementById('applyDropdownWrapper');
+    const applyMainBtn = document.getElementById('applyMainBtn');
+    const applyToggleBtn = document.getElementById('applyToggleBtn');
+    const applyDropdownMenu = document.getElementById('applyDropdownMenu');
+    const applyTargetModal = document.getElementById('applyTargetModal');
+    const applyTargetTree = document.getElementById('applyTargetTree');
+    const closeApplyModalBtn = document.getElementById('closeApplyModalBtn');
+    const cancelApplyModalBtn = document.getElementById('cancelApplyModalBtn');
+    const confirmApplyModalBtn = document.getElementById('confirmApplyModalBtn');
+    const selectAllTargetsBtn = document.getElementById('selectAllTargetsBtn');
 
-    // 语言切换简单逻辑
-    const btnZH = document.getElementById('langZH');
-    const btnEN = document.getElementById('langEN');
+    let selectedApplyMode = 'sameView';
+    let selectedCustomTargets = [];
 
-    btnZH.addEventListener('click', () => {
-      btnZH.classList.add('bg-purple-600', 'text-white');
-      btnZH.classList.remove('text-gray-400');
-      btnEN.classList.remove('bg-purple-600', 'text-white');
-      btnEN.classList.add('text-gray-400');
-    });
+    // Recording variables
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioBlob = null;
+    let audioUrl = null;
+    let isRecording = false;
+    let recordButton = null;
+    let playButton = null;
 
-    btnEN.addEventListener('click', () => {
-      btnEN.classList.add('bg-purple-600', 'text-white');
-      btnEN.classList.remove('text-gray-400');
-      btnZH.classList.remove('bg-purple-600', 'text-white');
-      btnZH.classList.add('text-gray-400');
-    });
+    const languages = [
+      { code: 'cn', label: 'Simplified Chinese (CN)' },
+      { code: 'us', label: 'English (US)' },
+      { code: 'de', label: 'Deutsch (DE)' },
+      { code: 'fr', label: 'French (FR)' }
+    ];
 
-    // 模拟新增指令
-    function addInstruction() {
-      const list = document.getElementById('instructionList');
-      const newId = (list.children.length + 1).toString().padStart(2, '0');
-      const newItem = document.createElement('div');
-      newItem.className = "bg-[#1e1e2d] border border-transparent hover:border-purple-500/50 rounded-xl p-4 cursor-pointer relative group transition-all animate-pulse";
-      newItem.innerHTML = `
-                <div class="flex justify-between items-start mb-2">
-                    <div class="bg-gray-800 p-2 rounded-lg">
-                        <iconify-icon icon="solar:file-new-bold-duotone" class="text-xl text-gray-400"></iconify-icon>
-                    </div>
-                </div>
-                <h3 class="font-bold text-sm text-gray-300 mb-1">${newId}. 新建待编辑指令</h3>
-                <p class="text-xs text-gray-500 line-clamp-1 mb-3">点击右侧开始配置详情及录音。</p>
-                <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
-                    <div class="flex items-center space-x-2 text-gray-500">
-                        <iconify-icon icon="solar:microphone-bold" class="text-xs"></iconify-icon>
-                        <span class="text-[10px] font-mono">--:--</span>
-                    </div>
-                </div>
-            `;
-      list.appendChild(newItem);
-      setTimeout(() => newItem.classList.remove('animate-pulse'), 1000);
+    const translations = {
+      cn: {
+        header_title: '患者定位指导语音管理系统',
+        header_subtitle: '患者定位指导语音系统',
+        protocol_label: '协议 / 视图 / 受体',
+        search_placeholder: '搜索协议/视图/受体...',
+        instruction_list: '指导语句列表',
+        instructions_for: '针对 Wallstand 的指导',
+        add_instruction: '添加指导',
+        instruction_editor: '指导编辑器',
+        language_switch: '语言环境切换（每种语言独立录音）',
+        instruction_name: '指导语句名称',
+        system_code: '系统识别码',
+        description: '指导详细描述',
+        recording_control: '指导语音录制控制',
+        speed: '速度',
+        delete_instruction: '删除此指导',
+        record: '录制',
+        play: '播放',
+        copy_all: '全部复制',
+        copy_current_instruction: '复制当前指导',
+        paste: '粘贴',
+        apply: '应用（应用同步）',
+        gallery: '系统库',
+        upload: 'USB 上传',
+        add_image: '添加图片',
+        after_modify: '修改后，请点击"应用"来同步到此协议下的其他视图。'
+      },
+      us: {
+        header_title: 'Patient Positioning Instruction Management System',
+        header_subtitle: 'Patient Positioning Instruction System',
+        protocol_label: 'Protocol / View / Receptor',
+        search_placeholder: 'Search protocols/views/receptors...',
+        instruction_list: 'Instruction List',
+        instructions_for: 'Instructions for Wallstand',
+        add_instruction: 'Add Instruction',
+        instruction_editor: 'Instruction Editor',
+        language_switch: 'Language Environment Switch (Independent Content Recording for Each Language)',
+        instruction_name: 'Instruction Name',
+        system_code: 'System Identification Code',
+        description: 'Instruction Detailed Description',
+        recording_control: 'Instruction Recording Control',
+        speed: 'Speed',
+        delete_instruction: 'Delete This Instruction',
+        record: 'Record',
+        play: 'Play',
+        copy_all: 'Copy All',
+        copy_current_instruction: 'Copy Current Instruction',
+        paste: 'Paste',
+        apply: 'Apply (Apply Sync)',
+        gallery: 'System Gallery',
+        upload: 'USB Upload',
+        add_image: 'Add Image',
+        after_modify: 'After modification, please click Apply to sync to other Views under this Protocol.'
+      },
+      de: {
+        header_title: 'Verwaltungssystem für Patientenpositionierungsanweisungen',
+        header_subtitle: 'Patientenpositionierungsanweisungssystem',
+        protocol_label: 'Protokoll / Ansicht / Empfänger',
+        search_placeholder: 'Protokolle/Ansichten/Empfänger durchsuchen...',
+        instruction_list: 'Anweisungsliste',
+        instructions_for: 'Anweisungen für Wallstand',
+        add_instruction: 'Anweisung hinzufügen',
+        instruction_editor: 'Anweisungs-Editor',
+        language_switch: 'Sprachbereich umschalten (Unabhängige Inhaltsaufnahme für jede Sprache)',
+        instruction_name: 'Name der Anweisung',
+        system_code: 'Systemidentifikationscode',
+        description: 'Detaillierte Anweisungsbeschreibung',
+        recording_control: 'Anweisungsaufnahmeregelung',
+        speed: 'Geschwindigkeit',
+        delete_instruction: 'Diese Anweisung löschen',
+        record: 'Aufnehmen',
+        play: 'Abspielen',
+        copy_all: 'Alles kopieren',
+        copy_current_instruction: 'Aktuelle Anweisung kopieren',
+        paste: 'Einfügen',
+        apply: 'Anwenden (Synchronisierung anwenden)',
+        gallery: 'Systemgalerie',
+        upload: 'USB-Upload',
+        add_image: 'Bild hinzufügen',
+        after_modify: 'Klicken Sie nach der Änderung auf "Anwenden", um die Synchronisierung mit anderen Ansichten unter diesem Protokoll durchzuführen.'
+      },
+      fr: {
+        header_title: 'Système de gestion des instructions de positionnement des patients',
+        header_subtitle: 'Système d\'instructions de positionnement des patients',
+        protocol_label: 'Protocole / Affichage / Récepteur',
+        search_placeholder: 'Rechercher protocoles/affichages/récepteurs...',
+        instruction_list: 'Liste des instructions',
+        instructions_for: 'Instructions pour Wallstand',
+        add_instruction: 'Ajouter une instruction',
+        instruction_editor: 'Éditeur d\'instructions',
+        language_switch: 'Changement d\'environnement linguistique (enregistrement de contenu indépendant pour chaque langue)',
+        instruction_name: 'Nom de l\'instruction',
+        system_code: 'Code d\'identification du système',
+        description: 'Description détaillée des instructions',
+        recording_control: 'Contrôle d\'enregistrement des instructions',
+        speed: 'Vitesse',
+        delete_instruction: 'Supprimer cette instruction',
+        record: 'Enregistrer',
+        play: 'Lire',
+        copy_all: 'Tout copier',
+        copy_current_instruction: 'Copier l\'instruction actuelle',
+        paste: 'Coller',
+        apply: 'Appliquer (Appliquer la synchronisation)',
+        gallery: 'Galerie système',
+        upload: 'Téléchargement USB',
+        add_image: 'Ajouter une image',
+        after_modify: 'Après la modification, veuillez cliquer sur Appliquer pour synchroniser avec d\'autres affichages sous ce protocole.'
+      }
+    };
+
+    const state = {
+      protocol: 'Chest',
+      view: 'PA',
+      receptor: 'Wallstand',
+      language: 'us',
+      selectedInstructionId: '01',
+      instructions: [
+        { 
+          id: '01', 
+          titles: { cn: '请走到A点', us: 'Go to Point A', de: 'Gehen Sie zu Punkt A', fr: 'Allez au point A' },
+          descriptions: { cn: '指导患者走到检查室的A点位置，准备进行胸部检查。请确保患者站立稳定，双脚分开与肩同宽。', us: 'Guide the patient to go to point A in the examination room, prepare for chest examination. Ensure the patient stands steadily with feet shoulder-width apart.', de: 'Führen Sie den Patienten zum Punkt A im Untersuchungszimmer, bereiten Sie sich auf die Brustuntersuchung vor. Stellen Sie sicher, dass der Patient stabil steht, mit den Füßen schulterbreit auseinander.', fr: 'Guidez le patient jusqu\'au point A dans la salle d\'examen, préparez-vous à l\'examen pulmonaire. Assurez-vous que le patient se tient fermement, les pieds écartés à la largeur des épaules.' },
+          duration: '00:03.4',
+          image: 'Chest PA.jpg'
+        },
+        { 
+          id: '02', 
+          titles: { cn: '请双手叉腰', us: 'Please Put Hands on Hips', de: 'Bitte Hände auf den Hüften', fr: 'Veuillez mettre les mains sur les hanches' },
+          descriptions: { cn: '指导患者将双手放在腰部，保持身体挺直。这个姿势有助于展开肺部，确保获得最清晰的胸部影像。', us: 'Instruct the patient to place both hands on their hips, keeping the body straight. This posture helps expand the lungs and ensures the clearest chest image.', de: 'Weisen Sie den Patienten an, beide Hände auf die Hüften zu legen und den Körper gerade zu halten. Diese Haltung hilft, die Lungen zu erweitern und stellt das klarste Brustbild sicher.', fr: 'Demandez au patient de placer les deux mains sur les hanches, en gardant le corps droit. Cette posture aide à dilater les poumons et garantit l\'image thoracique la plus claire.' },
+          duration: '00:02.1',
+          image: null
+        },
+        { 
+          id: '03', 
+          titles: { cn: '请屏住呼吸', us: 'Please Hold Your Breath', de: 'Bitte halten Sie den Atem an', fr: 'Veuillez retenir votre respiration' },
+          descriptions: { cn: '要求患者深吸一口气，然后屏住呼吸。屏住呼吸可以减少患者移动，获得更清晰的图像。通常需要屏住呼吸10秒左右。', us: 'Ask the patient to take a deep breath and hold it. Holding breath reduces patient movement and provides a clearer image. Usually need to hold breath for about 10 seconds.', de: 'Bitten Sie den Patienten, tief einzuatmen und den Atem anzuhalten. Das Anhalten des Atems reduziert die Bewegung des Patienten und liefert ein klareres Bild. Üblicherweise müssen Sie etwa 10 Sekunden lang den Atem anhalten.', fr: 'Demandez au patient de prendre une profonde inspiration et de retenir son souffle. Retenir son souffle réduit le mouvement du patient et fournit une image plus claire. Habituellement, vous devez retenir votre souffle pendant environ 10 secondes.' },
+          duration: '00:04.2',
+          image: null
+        },
+        { 
+          id: '04', 
+          titles: { cn: '可以呼吸了', us: 'You Can Breathe Now', de: 'Sie können jetzt atmen', fr: 'Vous pouvez maintenant respirer' },
+          descriptions: { cn: '告知患者可以恢复正常呼吸。此时检查已经完成，患者可以放松身体。对患者进行检查完毕的确认。', us: 'Inform the patient they can resume normal breathing. The examination is now complete and the patient can relax. Confirm with the patient that the examination is finished.', de: 'Teilen Sie dem Patienten mit, dass er normal atmen kann. Die Untersuchung ist jetzt abgeschlossen und der Patient kann sich entspannen. Bestätigen Sie dem Patienten, dass die Untersuchung beendet ist.', fr: 'Informez le patient qu\'il peut reprendre sa respiration normale. L\'examen est maintenant terminé et le patient peut se détendre. Confirmez au patient que l\'examen est terminé.' },
+          duration: '00:01.8',
+          image: null
+        },
+        { 
+          id: '05', 
+          titles: { cn: '请离开检查室', us: 'Please Leave the Examination Room', de: 'Bitte verlassen Sie den Untersuchungsraum', fr: 'Veuillez quitter la salle d\'examen' },
+          descriptions: { cn: '指导患者离开检查室。提醒患者检查已完成，感谢患者的配合。指引患者返回候诊区或其他指定区域。', us: 'Guide the patient to leave the examination room. Remind the patient the examination is complete and thank them for their cooperation. Direct the patient back to the waiting area or other designated area.', de: 'Führen Sie den Patienten aus dem Untersuchungsraum. Erinnern Sie den Patienten daran, dass die Untersuchung abgeschlossen ist, und danken Sie ihm für seine Zusammenarbeit. Leiten Sie den Patienten zurück in den Wartebereich oder einen anderen ausgewiesenen Bereich.', fr: 'Guidez le patient pour qu\'il quitte la salle d\'examen. Rappelez au patient que l\'examen est terminé et remerciez-le pour sa coopération. Dirigez le patient vers la salle d\'attente ou une autre zone désignée.' },
+          duration: '00:02.5',
+          image: null
+        }
+      ]
+    };
+
+    function formatDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
+
+    document.getElementById('currentDate').textContent = formatDate();
+
+    function renderInstructions() {
+      instructionListEl.innerHTML = state.instructions.map((item, index) => {
+        const isSelected = item.id === state.selectedInstructionId;
+        const title = item.titles[state.language] || item.titles.us;
+        const description = item.descriptions[state.language] || item.descriptions.us;
+        return `
+          <div class="bg-[#1e1e2d] ${isSelected ? 'border-2 border-purple-500 text-white' : 'border border-transparent hover:border-[#2d2d3f] text-gray-300'} rounded-xl p-4 cursor-move relative group transition-all" 
+               data-instruction-id="${item.id}" 
+               data-index="${index}" 
+               draggable="true">
+            <div class="flex justify-between items-start mb-2">
+              <div class="${isSelected ? 'bg-purple-900/40' : 'bg-gray-800'} p-2 rounded-lg">
+                <iconify-icon class="text-xl ${isSelected ? 'text-purple-400' : 'text-gray-400'}" icon="solar:accessibility-bold-duotone"></iconify-icon>
+              </div>
+              ${isSelected ? '<span class="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded uppercase font-bold tracking-wider">Active</span>' : ''}
+            </div>
+            <h3 class="font-bold text-sm ${isSelected ? 'text-white' : 'text-gray-300'} mb-1">${item.id}. ${title}</h3>
+            <p class="text-xs ${isSelected ? 'text-gray-300' : 'text-gray-500'} line-clamp-1 mb-3">${description}</p>
+            <div class="flex items-center justify-between pt-3 border-t border-[#2d2d3f]">
+              <div class="flex items-center space-x-2 ${isSelected ? 'text-green-400' : 'text-gray-500'}">
+                <iconify-icon class="text-xs" icon="solar:microphone-bold"></iconify-icon>
+                <span class="text-[10px] font-mono">${item.duration}</span>
+              </div>
+              <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button type="button" class="text-gray-500 hover:text-red-500" data-action="delete" data-id="${item.id}">
+                  <iconify-icon icon="solar:trash-bin-trash-bold"></iconify-icon>
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+      bindDragEvents();
+    }
+
+    // Render image section based on current instruction's image state
+    function renderImageSection() {
+      const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+      if (!currentInstruction) return;
+
+      if (currentInstruction.image) {
+        // Show filled state
+        imageEmptyState.classList.add('hidden');
+        imageFilledState.classList.remove('hidden');
+        instructionImage.src = currentInstruction.image;
+      } else {
+        // Show empty state
+        imageEmptyState.classList.remove('hidden');
+        imageFilledState.classList.add('hidden');
+      }
+    }
+
+    // Handle image file selection (both add and replace)
+    function handleImageFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+        if (currentInstruction) {
+          currentInstruction.image = event.target.result;
+          renderImageSection();
+        }
+      };
+      reader.readAsDataURL(file);
+      
+      // Reset input so same file can be selected again
+      imageFileInput.value = '';
+    }
+
+    // Delete image from current instruction
+    function deleteImage() {
+      const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+      if (currentInstruction) {
+        currentInstruction.image = null;
+        renderImageSection();
+      }
+    }
+
+    // Bind event listeners for image management
+    function bindImageEvents() {
+      // Add image: click empty state
+      imageEmptyState.addEventListener('click', () => {
+        imageFileInput.click();
+      });
+
+      // Replace image: click filled state
+      imageFilledState.addEventListener('click', (e) => {
+        if (!e.target.closest('button')) {
+          imageFileInput.click();
+        }
+      });
+
+      // File input change handler
+      imageFileInput.addEventListener('change', handleImageFileSelect);
+
+      // Delete button
+      const deleteBtn = document.getElementById('deleteImageBtn');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteImage();
+        });
+      }
+
+      // Replace button
+      const replaceBtn = document.getElementById('replaceImageBtn');
+      if (replaceBtn) {
+        replaceBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          imageFileInput.click();
+        });
+      }
+    }
+
+    // Recording functions
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          audioUrl = URL.createObjectURL(audioBlob);
+          
+          // Save to file
+          saveRecordingToFile();
+          
+          // Stop all tracks to release microphone
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        updateRecordButton();
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        alert('无法访问麦克风，请检查权限设置。');
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        updateRecordButton();
+      }
+    }
+
+    function playRecording() {
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.play();
+      } else {
+        alert('没有录音文件可播放。');
+      }
+    }
+
+    function saveRecordingToFile() {
+      if (audioBlob) {
+        const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+        if (currentInstruction) {
+          const filename = `recording_${state.protocol}_${state.view}_${state.receptor}_${currentInstruction.id}_${state.language}.wav`;
+          
+          // Create download link
+          const link = document.createElement('a');
+          link.href = audioUrl;
+          link.download = filename;W
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      }
+    }
+
+    function updateRecordButton() {
+      if (!recordButton) {
+        recordButton = document.querySelector('.flex.items-center.space-x-2.bg-red-600');
+      }
+      
+      if (recordButton) {
+        const icon = recordButton.querySelector('iconify-icon');
+        const span = recordButton.querySelector('span');
+        
+        if (isRecording) {
+          // Change to stop button
+          recordButton.classList.remove('bg-red-600', 'hover:bg-red-700');
+          recordButton.classList.add('bg-orange-600', 'hover:bg-orange-700');
+          if (icon) icon.icon = 'solar:stop-circle-bold';
+          if (span) span.textContent = 'Stop';
+        } else {
+          // Change back to record button
+          recordButton.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+          recordButton.classList.add('bg-red-600', 'hover:bg-red-700');
+          if (icon) icon.icon = 'solar:record-bold-duotone';
+          if (span) span.textContent = 'Record';
+        }
+      }
+    }
+
+    // Bind recording events
+    function bindRecordingEvents() {
+      recordButton = document.querySelector('.flex.items-center.space-x-2.bg-red-600');
+      playButton = document.querySelector('.flex.items-center.space-x-2.bg-gray-700');
+      
+      if (recordButton) {
+        recordButton.addEventListener('click', () => {
+          if (isRecording) {
+            stopRecording();
+          } else {
+            startRecording();
+          }
+        });
+      }
+      
+      if (playButton) {
+        playButton.addEventListener('click', playRecording);
+      }
+    }
+
+    function renderEditor() {
+      const current = state.instructions.find(item => item.id === state.selectedInstructionId) || state.instructions[0];
+      if (!current) return;
+      state.selectedInstructionId = current.id;
+      const title = current.titles[state.language] || current.titles.us;
+      const description = current.descriptions[state.language] || current.descriptions.us;
+      instructionNameInput.value = title;
+      instructionDescriptionInput.value = description;
+      instructionCodeInput.value = `INS_${state.protocol.toUpperCase().replace(/[^A-Z0-9]/g, '_')}_${current.id}`;
+      headerPathEl.textContent = `${state.protocol} > ${state.view}${state.receptor ? ' > ' + state.receptor : ''}`;
+      languageNoteEl.textContent = `Selected voice language: ${languages.find(l => l.code === state.language).label}`;
+      updateLanguageButtons();
+      updateProtocolSelection();
+      renderImageSection();
+    }
+
+    function updateProtocolSelection() {
+      const viewEls = protocolTree.querySelectorAll('[data-type="view"]');
+      const receptorEls = protocolTree.querySelectorAll('[data-type="receptor"]');
+      viewEls.forEach(el => {
+        const match = el.dataset.protocol === state.protocol && el.dataset.view === state.view;
+        el.classList.toggle('text-white', match);
+        el.classList.toggle('text-gray-500', !match);
+        el.classList.toggle('font-semibold', match);
+      });
+      receptorEls.forEach(el => {
+        const match = el.dataset.protocol === state.protocol && el.dataset.view === state.view && el.dataset.receptor === state.receptor;
+        el.classList.toggle('active-protocol', match);
+        el.classList.toggle('text-white', match);
+        el.classList.toggle('text-gray-500', !match);
+      });
+    }
+
+    function setLanguage(langCode) {
+      state.language = langCode;
+      languageNoteEl.textContent = `Selected voice language: ${languages.find(l => l.code === langCode).label}`;
+      updateLanguageButtons();
+      renderInstructions();
+      renderEditor();
+    }
+
+    function updateUIText() {
+      const t = translations[state.language] || translations.us;
+      
+      // Header title
+      const headerTitle = document.querySelector('h1');
+      const versionSpan = headerTitle.querySelector('.text-purple-400');
+      headerTitle.textContent = t.header_title + ' ';
+      if (versionSpan) {
+        headerTitle.appendChild(versionSpan);
+      } else {
+        const span = document.createElement('span');
+        span.className = 'text-purple-400 text-xs font-normal ml-2';
+        span.textContent = 'v2.4.0';
+        headerTitle.appendChild(span);
+      }
+      
+      // Header subtitle
+      const headerParagraphs = document.querySelectorAll('header p');
+      if (headerParagraphs.length > 0) {
+        headerParagraphs[0].textContent = t.header_subtitle;
+      }
+      
+      // Search placeholder
+      const searchInput = document.querySelector('input[placeholder*="Search"]');
+      if (searchInput) searchInput.placeholder = t.search_placeholder;
+      
+      // Protocol label
+      const allSmallLabels = document.querySelectorAll('.text-xs.font-semibold.text-gray-500');
+      if (allSmallLabels.length > 0) {
+        allSmallLabels[0].textContent = t.protocol_label;
+      }
+      
+      // Instruction list title
+      const allH2 = document.querySelectorAll('h2');
+      if (allH2.length > 0) {
+        allH2[0].textContent = t.instruction_list;
+      }
+      
+      // Instructions for subtitle
+      const instructionSubtitles = document.querySelectorAll('.w-\\[380px\\] .text-\\[10px\\].text-gray-500');
+      if (instructionSubtitles.length > 0) {
+        instructionSubtitles[0].textContent = t.instructions_for;
+      }
+      
+      // Add instruction button
+      const addBtn = document.querySelector('button[onclick="addInstruction()"]');
+      if (addBtn) {
+        const span = addBtn.querySelector('span');
+        if (span) span.textContent = t.add_instruction;
+      }
+      
+      // Editor title
+      if (allH2.length > 1) {
+        allH2[1].textContent = t.instruction_editor;
+      }
+      
+      // Delete button
+      const deleteBtn = document.querySelector('button[onclick="deleteSelectedInstruction()"]');
+      if (deleteBtn) {
+        const span = deleteBtn.querySelector('span');
+        if (span) span.textContent = t.delete_instruction;
+      }
+      
+      // Language switch label
+      const allLabels = document.querySelectorAll('label.text-sm.font-semibold');
+      if (allLabels.length > 0) {
+        const langLabel = allLabels[0];
+        const icon = langLabel.querySelector('iconify-icon');
+        langLabel.textContent = '';
+        if (icon) langLabel.appendChild(icon);
+        langLabel.innerHTML += t.language_switch;
+      }
+      
+      // Form labels for instruction details
+      const smallLabels = document.querySelectorAll('label.text-xs.font-semibold.text-gray-500.uppercase');
+      if (smallLabels.length >= 3) {
+        smallLabels[0].textContent = t.instruction_name;
+        smallLabels[1].textContent = t.system_code;
+        smallLabels[2].textContent = t.description;
+      }
+      
+      // Recording control title
+      const mainLabels = document.querySelectorAll('h3.text-sm.font-bold.text-white');
+      if (mainLabels.length > 0) {
+        const recordLabel = mainLabels[0];
+        const icon = recordLabel.querySelector('iconify-icon');
+        recordLabel.textContent = '';
+        if (icon) recordLabel.appendChild(icon);
+        recordLabel.innerHTML += t.recording_control;
+      }
+      
+      // Speed label  
+      const speedLabels = document.querySelectorAll('.text-\\[10px\\].text-gray-500.uppercase');
+      if (speedLabels.length > 0) {
+        speedLabels[0].textContent = t.speed;
+      }
+      
+      // Record button
+      document.querySelectorAll('.flex.items-center.space-x-2.bg-red-600').forEach(btn => {
+        const span = btn.querySelector('span');
+        if (span) span.textContent = t.record;
+      });
+      
+      // Play button
+      document.querySelectorAll('.flex.items-center.space-x-2.bg-gray-700').forEach(btn => {
+        const span = btn.querySelector('span');
+        if (span) span.textContent = t.play;
+      });
+      
+      // Gallery and Upload buttons
+      const grayButtons = document.querySelectorAll('button.text-xs.bg-gray-800');
+      grayButtons.forEach(btn => {
+        if (btn.textContent.includes('System') || btn.innerHTML.includes('server')) {
+          const span = btn.querySelector('span');
+          if (span) span.textContent = t.gallery;
+        }
+        if (btn.textContent.includes('USB') || btn.innerHTML.includes('usb')) {
+          const span = btn.querySelector('span');
+          if (span) span.textContent = t.upload;
+        }
+      });
+      
+      // Add Image button
+      const addImageBtn = document.querySelector('button.aspect-video.bg-\\[151520\\]');
+      if (addImageBtn) {
+        const span = addImageBtn.querySelector('span');
+        if (span) span.textContent = t.add_image;
+      }
+      
+      // Copy and Paste buttons at bottom
+    //   const bottomButtons = document.querySelectorAll('.h-20 .flex.items-center.space-x-2');
+    //   bottomButtons.forEach(btn => {
+    //     if (btn.querySelector('span')) {
+    //       const span = btn.querySelector('span');
+    //       if (btn.textContent.includes('Copy')) span.textContent = t.copy_all;
+    //       if (btn.textContent.includes('Paste')) span.textContent = t.paste;
+    //     }
+    //   });
+
+       const bottomButtons = document.querySelectorAll('.h-20 .flex.items-center.space-x-2');
+      bottomButtons.forEach(btn => {
+        if (btn.querySelector('span')) {
+          const span = btn.querySelector('span');
+            if (span.textContent.trim() === 'Copy All') {
+                span.textContent = t.copy_all;
+            }
+
+            if (span.textContent.trim() === 'Copy Current Instruction') {
+                span.textContent = t.copy_current_instruction;
+            }
+
+            if (span.textContent.trim() === 'Paste') {
+                span.textContent = t.paste;
+            }
+        }
+      });
+
+      
+      // Apply button
+      const applyBtn = document.querySelector('.bg-purple-600.hover\\:bg-purple-700.px-10');
+      if (applyBtn) {
+        const span = applyBtn.querySelector('span');
+        if (span) span.textContent = t.apply;
+      }
+      
+      // After modify text
+      const footerParagraphs = document.querySelectorAll('.h-20 .text-xs.text-gray-500');
+      if (footerParagraphs.length > 0) {
+        footerParagraphs[0].textContent = t.after_modify;
+      }
+    }
+
+    function buildApplyTargetTree() {
+      if (!applyTargetTree || !protocolTree) return;
+      applyTargetTree.innerHTML = '';
+      const receptorNodes = protocolTree.querySelectorAll('[data-type="receptor"]');
+      receptorNodes.forEach(node => {
+        const protocol = node.dataset.protocol;
+        const view = node.dataset.view;
+        const receptor = node.dataset.receptor;
+        const key = `${protocol}||${view}||${receptor}`;
+        const isCurrent = protocol === state.protocol && view === state.view && receptor === state.receptor;
+        const label = `${protocol} / ${view} / ${receptor}`;
+        const wrapper = document.createElement('label');
+        wrapper.className = 'flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#13131b] hover:bg-[#1f1f2b] transition-all cursor-pointer';
+        wrapper.innerHTML = `
+          <span class="text-sm text-gray-200">${label}</span>
+          <input type="checkbox" value="${key}" ${isCurrent ? 'disabled checked' : ''} class="h-4 w-4 text-purple-500 rounded border-gray-600 bg-[#0b0b0e]" />
+        `;
+        applyTargetTree.appendChild(wrapper);
+      });
+    }
+
+    function updateApplyDropdownMenu() {
+      if (!applyDropdownMenu) return;
+      applyDropdownMenu.querySelectorAll('button').forEach(button => {
+        button.classList.toggle('bg-purple-500/10', button.dataset.applyMode === selectedApplyMode);
+      });
+    }
+
+    function closeApplyDropdown() {
+      if (applyDropdownMenu) applyDropdownMenu.classList.add('hidden');
+    }
+
+    function showApplyModal() {
+      if (!applyTargetModal) return;
+      buildApplyTargetTree();
+      selectedApplyMode = 'custom';
+      updateApplyDropdownMenu();
+      closeApplyDropdown();
+      applyTargetModal.classList.remove('hidden');
+    }
+
+    function hideApplyModal() {
+      if (!applyTargetModal) return;
+      applyTargetModal.classList.add('hidden');
+    }
+
+    function getCustomTargetSelection() {
+      const selected = [];
+      if (!applyTargetTree) return selected;
+      applyTargetTree.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        if (!checkbox.disabled) selected.push(checkbox.value);
+      });
+      return selected;
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-6 right-6 z-50 rounded-2xl bg-black/90 px-4 py-3 text-sm text-white shadow-2xl shadow-black/40';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2800);
+    }
+
+    function applyCurrentInstruction() {
+      if (selectedApplyMode === 'sameView') {
+        if (!confirm('Apply current instruction to the same view? This will overwrite existing instruction content in this view.')) return;
+        showToast('Applied to same view successfully.');
+      } else if (selectedApplyMode === 'sameProtocol') {
+        if (!confirm('Apply current instruction to all views within the same protocol? This will overwrite existing content.')) return;
+        showToast('Applied to same protocol successfully.');
+      } else if (selectedApplyMode === 'custom') {
+        const customList = getCustomTargetSelection();
+        if (customList.length === 0) {
+          alert('Please select at least one custom target in the modal.');
+          return;
+        }
+        if (!confirm(`Apply current instruction to ${customList.length} custom target(s)? This will overwrite existing content.`)) return;
+        hideApplyModal();
+        showToast(`Applied to ${customList.length} custom target(s) successfully.`);
+      }
+      closeApplyDropdown();
+    }
+
+    function initializeApplyControls() {
+      updateApplyDropdownMenu();
+      if (applyMainBtn) {
+        applyMainBtn.addEventListener('click', applyCurrentInstruction);
+      }
+      if (applyToggleBtn) {
+        applyToggleBtn.addEventListener('click', () => {
+          if (applyDropdownMenu) {
+            applyDropdownMenu.classList.toggle('hidden');
+          }
+        });
+      }
+      if (applyDropdownMenu) {
+        applyDropdownMenu.addEventListener('click', event => {
+          event.stopPropagation();   // ✅ ✅ ✅ 就加这一行（关键！！！）
+          const button = event.target.closest('button[data-apply-mode]');
+          if (!button) return;
+          const mode = button.dataset.applyMode;
+          if (mode === 'custom') {
+            showApplyModal();
+          } else {
+            selectedApplyMode = mode;
+            updateApplyDropdownMenu();
+            closeApplyDropdown();
+          }
+        });
+      }
+      if (closeApplyModalBtn) closeApplyModalBtn.addEventListener('click', hideApplyModal);
+      if (cancelApplyModalBtn) cancelApplyModalBtn.addEventListener('click', hideApplyModal);
+      if (confirmApplyModalBtn) confirmApplyModalBtn.addEventListener('click', () => {
+        const selected = getCustomTargetSelection();
+        if (selected.length === 0) {
+          alert('Please choose at least one custom target before applying.');
+          return;
+        }
+        if (!confirm(`Apply current instruction to ${selected.length} selected target(s)? This will overwrite existing content.`)) return;
+        hideApplyModal();
+        showToast(`Applied to ${selected.length} custom target(s) successfully.`);
+      });
+      if (selectAllTargetsBtn && applyTargetTree) {
+        selectAllTargetsBtn.addEventListener('click', () => {
+          applyTargetTree.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = true);
+        });
+      }
+      document.addEventListener('click', event => {
+        if (applyDropdownWrapper && !applyDropdownWrapper.contains(event.target)) {
+          closeApplyDropdown();
+        }
+      });
+    }
+
+    function updateLanguageButtons() {
+      languageButtons.forEach(button => {
+        const selected = button.dataset.lang === state.language;
+        button.classList.toggle('border-purple-500', selected);
+        button.classList.toggle('bg-purple-500/10', selected);
+        button.classList.toggle('text-white', selected);
+        button.classList.toggle('border-[#2d2d3f]', !selected);
+        button.classList.toggle('text-gray-400', !selected);
+      });
+    }
+
+    function selectInstruction(id) {
+      state.selectedInstructionId = id;
+      renderInstructions();
+      renderEditor();
+    }
+
+    function deleteInstruction(id) {
+      const index = state.instructions.findIndex(item => item.id === id);
+      if (index === -1) return;
+      state.instructions.splice(index, 1);
+      if (state.instructions.length === 0) {
+        state.instructions.push({ 
+          id: '01', 
+          titles: { cn: '新指导', us: 'New Instruction', de: 'Neue Anweisung', fr: 'Nouvelle instruction' }, 
+          descriptions: { cn: '创建一个新的指导并录制语音。', us: 'Create a new instruction and record guidance.', de: 'Erstellen Sie eine neue Anweisung und zeichnen Sie eine Anleitung auf.', fr: 'Créez une nouvelle instruction et enregistrez des conseils.' },
+          duration: '00:00.0' 
+        });
+        state.selectedInstructionId = '01';
+      } else if (state.selectedInstructionId === id) {
+        const next = state.instructions[index] || state.instructions[index - 1];
+        state.selectedInstructionId = next.id;
+      }
+      renderInstructions();
+      renderEditor();
+    }
+
+    function deleteSelectedInstruction() {
+      deleteInstruction(state.selectedInstructionId);
+    }
+
+    function addInstruction() {
+      const nextId = String(state.instructions.length + 1).padStart(2, '0');
+      const newInstruction = {
+        id: nextId,
+        titles: { cn: `新指导 ${nextId}`, us: `New Instruction ${nextId}`, de: `Neue Anweisung ${nextId}`, fr: `Nouvelle instruction ${nextId}` },
+        descriptions: { cn: '点击此指导来编辑详细信息并分配录音。', us: 'Click this instruction to edit details and assign a recording.', de: 'Klicken Sie auf diese Anweisung, um Details zu bearbeiten und eine Aufnahme zuzuweisen.', fr: 'Cliquez sur cette instruction pour éditer les détails et assigner un enregistrement.' },
+        duration: '00:00.0'
+      };
+      state.instructions.push(newInstruction);
+      selectInstruction(nextId);
+    }
+
+    function bindDragEvents() {
+      const cards = instructionListEl.querySelectorAll('[data-instruction-id]');
+      let draggedIndex = null;
+
+      cards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+          draggedIndex = parseInt(card.dataset.index);
+          card.style.opacity = '0.5';
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        card.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          const dropIndex = parseInt(card.dataset.index);
+          if (draggedIndex !== dropIndex) {
+            card.style.borderTop = '2px solid #8b5cf6';
+          }
+        });
+
+        card.addEventListener('dragleave', (e) => {
+          card.style.borderTop = '';
+        });
+
+        card.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const dropIndex = parseInt(card.dataset.index);
+          if (draggedIndex !== dropIndex) {
+            const draggedItem = state.instructions[draggedIndex];
+            state.instructions.splice(draggedIndex, 1);
+            state.instructions.splice(dropIndex, 0, draggedItem);
+            
+            // Renumber all instructions
+            state.instructions.forEach((item, idx) => {
+              item.id = String(idx + 1).padStart(2, '0');
+            });
+            
+            renderInstructions();
+            renderEditor();
+          }
+        });
+
+        card.addEventListener('dragend', (e) => {
+          card.style.opacity = '1';
+          card.style.borderTop = '';
+          draggedIndex = null;
+        });
+      });
+    }
+
+    function bindEvents() {
+      if (protocolTree) {
+        protocolTree.addEventListener('click', event => {
+          const item = event.target.closest('[data-type]');
+          if (!item) return;
+          const type = item.dataset.type;
+          const protocol = item.dataset.protocol;
+          const view = item.dataset.view;
+          const receptor = item.dataset.receptor;
+          if (type === 'protocol') {
+            state.protocol = protocol;
+            state.view = view || protocol;
+            state.receptor = receptor || '';
+          } else if (type === 'view') {
+            state.protocol = protocol;
+            state.view = view;
+            const firstReceptor = protocolTree.querySelector(`[data-type="receptor"][data-protocol="${protocol}"][data-view="${view}"]`);
+            state.receptor = firstReceptor ? firstReceptor.dataset.receptor : '';
+          } else if (type === 'receptor') {
+            state.protocol = protocol;
+            state.view = view;
+            state.receptor = receptor;
+          }
+          renderEditor();
+        });
+      }
+
+      const languageSwitcher = document.getElementById('languageSwitcher');
+      if (languageSwitcher) {
+        languageSwitcher.addEventListener('click', event => {
+          const button = event.target.closest('[data-lang]');
+          if (!button) return;
+          setLanguage(button.dataset.lang);
+        });
+      }
+
+      if (instructionListEl) {
+        instructionListEl.addEventListener('click', event => {
+          const deleteButton = event.target.closest('[data-action="delete"]');
+          if (deleteButton) {
+            deleteInstruction(deleteButton.dataset.id);
+            return;
+          }
+          const card = event.target.closest('[data-instruction-id]');
+          if (card) {
+            selectInstruction(card.dataset.instructionId);
+          }
+        });
+      }
+
+      if (instructionNameInput) {
+        instructionNameInput.addEventListener('input', () => {
+          const current = state.instructions.find(item => item.id === state.selectedInstructionId);
+          if (current) {
+            current.titles[state.language] = instructionNameInput.value;
+            renderInstructions();
+          }
+        });
+      }
+      if (instructionDescriptionInput) {
+        instructionDescriptionInput.addEventListener('input', () => {
+          const current = state.instructions.find(item => item.id === state.selectedInstructionId);
+          if (current) {
+            current.descriptions[state.language] = instructionDescriptionInput.value;
+            renderInstructions();
+          }
+        });
+      }
+    }
+
+    bindEvents();
+    initializeApplyControls();
+    bindImageEvents();
+    bindRecordingEvents();
+    renderInstructions();
+    renderEditor();
+    updateUIText();
   </script>
 
 </body>

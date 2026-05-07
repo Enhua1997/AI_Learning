@@ -61,6 +61,22 @@
       cursor: pointer;
       box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
     }
+
+    /* Apply dropdown: CSS-only show on focus-within (no JS required for visual) */
+    #applyDropdownWrapper:focus-within #applyDropdownMenu {
+      display: block !important;
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+    }
+
+    #applyDropdownMenu {
+      display: none; /* default hidden, overridden when wrapper receives focus */
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -114,16 +130,16 @@
               </div>
               <div class="ml-4 space-y-1">
                 <!-- Receptor -->
-                <div class="px-3 py-2 text-xs text-white active-protocol rounded-r-lg flex items-center justify-between cursor-pointer" data-type="receptor" data-protocol="Chest" data-view="PA" data-receptor="Wall Bucky">
+                <div class="px-3 py-2 text-xs text-white active-protocol rounded-r-lg flex items-center justify-between cursor-pointer" data-type="receptor" data-protocol="Chest" data-view="PA" data-receptor="Wallstand">
                   <div class="flex items-center">
                     <iconify-icon class="mr-2 text-purple-400" icon="solar:wall-bold-duotone"></iconify-icon>
-                    <span>Wall Bucky</span>
+                    <span>Wallstand</span>
                   </div>
                   <iconify-icon class="text-purple-500" icon="solar:check-circle-bold"></iconify-icon>
                 </div>
-                <div class="px-3 py-2 text-xs text-gray-500 hover:text-gray-300 flex items-center cursor-pointer transition-colors" data-type="receptor" data-protocol="Chest" data-view="PA" data-receptor="Table Bucky">
+                <div class="px-3 py-2 text-xs text-gray-500 hover:text-gray-300 flex items-center cursor-pointer transition-colors" data-type="receptor" data-protocol="Chest" data-view="PA" data-receptor="Table">
                   <iconify-icon class="mr-2" icon="solar:table-bold-duotone"></iconify-icon>
-                  <span>Table Bucky</span>
+                  <span>Table</span>
                 </div>
               </div>
             </div>
@@ -159,7 +175,7 @@
       <div class="p-4 border-b border-[#2d2d3f] flex items-center justify-between">
         <div>
         <h2 class="text-base font-bold text-white">Instruction List</h2>
-          <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Instructions for Wall Bucky</p>
+          <!-- <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Instructions for Wallstand</p> -->
         </div>
         <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1 transition-all" onclick="addInstruction()">
           <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
@@ -250,7 +266,7 @@
             <div class="flex items-center space-x-2 mt-0.5">
               <span class="text-[10px] text-gray-500">ID: INS-2026-0041</span>
               <span class="w-1 h-1 rounded-full bg-gray-700"></span>
-              <span id="headerPath" class="text-[10px] text-purple-400 font-bold uppercase tracking-widest underline decoration-purple-500/30">Chest &gt; PA &gt; Wall Bucky</span>
+              <span id="headerPath" class="text-[10px] text-purple-400 font-bold uppercase tracking-widest underline decoration-purple-500/30">Chest &gt; PA &gt; Wallstand</span>
             </div>
           </div>
         </div>
@@ -424,8 +440,6 @@
             </div>
             </div>
 
-
-
               <!-- Empty State -->
                <!-- <div id="imageContainer" class="relative inline-block bg-[#1e1e2d] rounded-xl border-2 border-dashed border-[#2d2d3f] overflow-hidden shadow-lg">
               <div id="imageEmptyState" class="w-full h-full flex flex-col items-center justify-center cursor-pointer group hover:border-purple-500/50 hover:bg-purple-600/5 transition-all">
@@ -456,6 +470,12 @@
             <iconify-icon icon="solar:copy-bold-duotone"></iconify-icon>
             <span>Copy All</span>
           </button>
+          
+        <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all">
+            <iconify-icon icon="solar:copy-outline"></iconify-icon>
+            <span>Copy Current Instruction</span>
+            </button>
+
           <button class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm border border-[#2d2d3f] transition-all opacity-50 cursor-not-allowed">
             <iconify-icon icon="solar:clipboard-list-bold-duotone"></iconify-icon>
             <span>Paste</span>
@@ -465,14 +485,48 @@
           <p class="text-xs text-gray-500 max-w-[200px] text-right">
             After modification, please click Apply to sync to other Views under this Protocol.
           </p>
-          <button class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-2">
-            <iconify-icon class="text-lg" icon="solar:check-read-bold"></iconify-icon>
-            <span>Apply (Apply Sync)</span>
-          </button>
+          <div class="relative" id="applyDropdownWrapper" tabindex="0" aria-haspopup="true" aria-expanded="false">
+            <button id="applyButton" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-2">
+              <iconify-icon class="text-lg" icon="solar:check-read-bold"></iconify-icon>
+              <span>Apply (Apply Sync)</span>
+              <iconify-icon class="text-lg" icon="solar:angle-down-bold"></iconify-icon>
+            </button>
+            <div id="applyDropdownMenu" class="hidden absolute right-0 top-full mt-2 w-64 bg-[#0b0b0e] border border-[#2d2d3f] rounded-3xl shadow-2xl shadow-black/30 overflow-hidden z-50">
+              <button type="button" data-apply-mode="sameView" class="w-full text-left px-4 py-3 text-gray-200 hover:bg-purple-500/10 transition-all">Apply to Same View</button>
+              <button type="button" data-apply-mode="sameProtocol" class="w-full text-left px-4 py-3 text-gray-200 hover:bg-purple-500/10 transition-all">Apply to Same Protocol</button>
+              <button type="button" data-apply-mode="custom" class="w-full text-left px-4 py-3 text-gray-200 hover:bg-purple-500/10 transition-all border-t border-[#2d2d3f]">Select Targets...</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <div id="applyTargetModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-[#0b0b0e] rounded-3xl w-full max-w-3xl border border-[#2d2d3f] shadow-2xl shadow-black/50 overflow-hidden">
+      <div class="flex items-start justify-between px-6 py-4 border-b border-[#2d2d3f]">
+        <div>
+          <h3 class="text-white text-lg font-bold">Select Targets</h3>
+          <p class="text-sm text-gray-400">Choose protocol/view/receptor targets for applying the current instruction.</p>
+        </div>
+        <button id="closeApplyModalBtn" type="button" class="text-gray-400 hover:text-white">
+          <iconify-icon icon="solar:close-bold"></iconify-icon>
+        </button>
+      </div>
+      <div class="px-6 py-4 space-y-4 max-h-[60vh] overflow-y-auto">
+        <div class="flex items-center justify-between text-sm text-gray-400">
+          <span>Target tree</span>
+          <button id="selectAllTargetsBtn" type="button" class="text-purple-400 hover:text-white text-xs">Select all</button>
+        </div>
+        <div id="applyTargetTree" class="space-y-4"></div>
+      </div>
+      <div class="px-6 py-4 border-t border-[#2d2d3f] flex justify-end gap-3">
+        <button id="cancelApplyModalBtn" type="button" class="px-4 py-2 bg-[#1f1f2b] text-gray-300 rounded-xl hover:bg-[#272735]">Cancel</button>
+        <button id="confirmApplyModalBtn" type="button" class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-500">Apply Selected</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const protocolTree = document.getElementById('protocolTree');
     const instructionListEl = document.getElementById('instructionList');
@@ -487,6 +541,24 @@
     const imageEmptyState = document.getElementById('imageEmptyState');
     const imageFilledState = document.getElementById('imageFilledState');
     const instructionImage = document.getElementById('instructionImage');
+    const applyButton = document.getElementById('applyButton');
+    const applyDropdownMenu = document.getElementById('applyDropdownMenu');
+    const applyTargetModal = document.getElementById('applyTargetModal');
+    const applyTargetTree = document.getElementById('applyTargetTree');
+    const closeApplyModalBtn = document.getElementById('closeApplyModalBtn');
+    const cancelApplyModalBtn = document.getElementById('cancelApplyModalBtn');
+    const confirmApplyModalBtn = document.getElementById('confirmApplyModalBtn');
+    const selectAllTargetsBtn = document.getElementById('selectAllTargetsBtn');
+    let selectedApplyMode = 'sameView';
+
+    // Recording variables
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioBlob = null;
+    let audioUrl = null;
+    let isRecording = false;
+    let recordButton = null;
+    let playButton = null;
 
     const languages = [
       { code: 'cn', label: 'Simplified Chinese (CN)' },
@@ -502,7 +574,7 @@
         protocol_label: '协议 / 视图 / 受体',
         search_placeholder: '搜索协议/视图/受体...',
         instruction_list: '指导语句列表',
-        instructions_for: '针对 Wall Bucky 的指导',
+        instructions_for: '针对 Wallstand 的指导',
         add_instruction: '添加指导',
         instruction_editor: '指导编辑器',
         language_switch: '语言环境切换（每种语言独立录音）',
@@ -515,6 +587,7 @@
         record: '录制',
         play: '播放',
         copy_all: '全部复制',
+        copy_current_instruction: '复制当前指导',
         paste: '粘贴',
         apply: '应用（应用同步）',
         gallery: '系统库',
@@ -528,7 +601,7 @@
         protocol_label: 'Protocol / View / Receptor',
         search_placeholder: 'Search protocols/views/receptors...',
         instruction_list: 'Instruction List',
-        instructions_for: 'Instructions for Wall Bucky',
+        instructions_for: 'Instructions for Wallstand',
         add_instruction: 'Add Instruction',
         instruction_editor: 'Instruction Editor',
         language_switch: 'Language Environment Switch (Independent Content Recording for Each Language)',
@@ -541,6 +614,7 @@
         record: 'Record',
         play: 'Play',
         copy_all: 'Copy All',
+        copy_current_instruction: 'Copy Current Instruction',
         paste: 'Paste',
         apply: 'Apply (Apply Sync)',
         gallery: 'System Gallery',
@@ -554,7 +628,7 @@
         protocol_label: 'Protokoll / Ansicht / Empfänger',
         search_placeholder: 'Protokolle/Ansichten/Empfänger durchsuchen...',
         instruction_list: 'Anweisungsliste',
-        instructions_for: 'Anweisungen für Wall Bucky',
+        instructions_for: 'Anweisungen für Wallstand',
         add_instruction: 'Anweisung hinzufügen',
         instruction_editor: 'Anweisungs-Editor',
         language_switch: 'Sprachbereich umschalten (Unabhängige Inhaltsaufnahme für jede Sprache)',
@@ -567,6 +641,7 @@
         record: 'Aufnehmen',
         play: 'Abspielen',
         copy_all: 'Alles kopieren',
+        copy_current_instruction: 'Aktuelle Anweisung kopieren',
         paste: 'Einfügen',
         apply: 'Anwenden (Synchronisierung anwenden)',
         gallery: 'Systemgalerie',
@@ -580,7 +655,7 @@
         protocol_label: 'Protocole / Affichage / Récepteur',
         search_placeholder: 'Rechercher protocoles/affichages/récepteurs...',
         instruction_list: 'Liste des instructions',
-        instructions_for: 'Instructions pour Wall Bucky',
+        instructions_for: 'Instructions pour Wallstand',
         add_instruction: 'Ajouter une instruction',
         instruction_editor: 'Éditeur d\'instructions',
         language_switch: 'Changement d\'environnement linguistique (enregistrement de contenu indépendant pour chaque langue)',
@@ -593,6 +668,7 @@
         record: 'Enregistrer',
         play: 'Lire',
         copy_all: 'Tout copier',
+        copy_current_instruction: 'Copier l\'instruction actuelle',
         paste: 'Coller',
         apply: 'Appliquer (Appliquer la synchronisation)',
         gallery: 'Galerie système',
@@ -605,7 +681,7 @@
     const state = {
       protocol: 'Chest',
       view: 'PA',
-      receptor: 'Wall Bucky',
+      receptor: 'Wallstand',
       language: 'us',
       selectedInstructionId: '01',
       instructions: [
@@ -769,6 +845,118 @@
           e.stopPropagation();
           imageFileInput.click();
         });
+      }
+    }
+
+    // Recording functions
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          audioUrl = URL.createObjectURL(audioBlob);
+          
+          // Save to file
+          saveRecordingToFile();
+          
+          // Stop all tracks to release microphone
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        updateRecordButton();
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        alert('无法访问麦克风，请检查权限设置。');
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        updateRecordButton();
+      }
+    }
+
+    function playRecording() {
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.play();
+      } else {
+        alert('没有录音文件可播放。');
+      }
+    }
+
+    function saveRecordingToFile() {
+      if (audioBlob) {
+        const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+        if (currentInstruction) {
+          const filename = `recording_${state.protocol}_${state.view}_${state.receptor}_${currentInstruction.id}_${state.language}.wav`;
+          
+          // Create download link
+          const link = document.createElement('a');
+          link.href = audioUrl;
+          link.download = filename;W
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      }
+    }
+
+    function updateRecordButton() {
+      if (!recordButton) {
+        recordButton = document.querySelector('.flex.items-center.space-x-2.bg-red-600');
+      }
+      
+      if (recordButton) {
+        const icon = recordButton.querySelector('iconify-icon');
+        const span = recordButton.querySelector('span');
+        
+        if (isRecording) {
+          // Change to stop button
+          recordButton.classList.remove('bg-red-600', 'hover:bg-red-700');
+          recordButton.classList.add('bg-orange-600', 'hover:bg-orange-700');
+          if (icon) icon.icon = 'solar:stop-circle-bold';
+          if (span) span.textContent = 'Stop';
+        } else {
+          // Change back to record button
+          recordButton.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+          recordButton.classList.add('bg-red-600', 'hover:bg-red-700');
+          if (icon) icon.icon = 'solar:record-bold-duotone';
+          if (span) span.textContent = 'Record';
+        }
+      }
+    }
+
+    // Bind recording events
+    function bindRecordingEvents() {
+      recordButton = document.querySelector('.flex.items-center.space-x-2.bg-red-600');
+      playButton = document.querySelector('.flex.items-center.space-x-2.bg-gray-700');
+      
+      if (recordButton) {
+        recordButton.addEventListener('click', () => {
+          if (isRecording) {
+            stopRecording();
+          } else {
+            startRecording();
+          }
+        });
+      }
+      
+      if (playButton) {
+        playButton.addEventListener('click', playRecording);
       }
     }
 
@@ -943,17 +1131,36 @@
       }
       
       // Copy and Paste buttons at bottom
-      const bottomButtons = document.querySelectorAll('.h-20 .flex.items-center.space-x-2');
+    //   const bottomButtons = document.querySelectorAll('.h-20 .flex.items-center.space-x-2');
+    //   bottomButtons.forEach(btn => {
+    //     if (btn.querySelector('span')) {
+    //       const span = btn.querySelector('span');
+    //       if (btn.textContent.includes('Copy')) span.textContent = t.copy_all;
+    //       if (btn.textContent.includes('Paste')) span.textContent = t.paste;
+    //     }
+    //   });
+
+       const bottomButtons = document.querySelectorAll('.h-20 .flex.items-center.space-x-2');
       bottomButtons.forEach(btn => {
         if (btn.querySelector('span')) {
           const span = btn.querySelector('span');
-          if (btn.textContent.includes('Copy')) span.textContent = t.copy_all;
-          if (btn.textContent.includes('Paste')) span.textContent = t.paste;
+            if (span.textContent.trim() === 'Copy All') {
+                span.textContent = t.copy_all;
+            }
+
+            if (span.textContent.trim() === 'Copy Current Instruction') {
+                span.textContent = t.copy_current_instruction;
+            }
+
+            if (span.textContent.trim() === 'Paste') {
+                span.textContent = t.paste;
+            }
         }
       });
+
       
       // Apply button
-      const applyBtn = document.querySelector('.bg-purple-600.hover\\:bg-purple-700.px-10');
+      const applyBtn = document.querySelector('#applyButton');
       if (applyBtn) {
         const span = applyBtn.querySelector('span');
         if (span) span.textContent = t.apply;
@@ -964,6 +1171,146 @@
       if (footerParagraphs.length > 0) {
         footerParagraphs[0].textContent = t.after_modify;
       }
+    }
+
+    function buildApplyTargetTree() {
+      if (!applyTargetTree || !protocolTree) return;
+      const tree = {};
+      protocolTree.querySelectorAll('[data-type="receptor"]').forEach(node => {
+        const protocol = node.dataset.protocol;
+        const view = node.dataset.view;
+        const receptor = node.dataset.receptor;
+        if (!tree[protocol]) tree[protocol] = {};
+        if (!tree[protocol][view]) tree[protocol][view] = [];
+        tree[protocol][view].push(receptor);
+      });
+      applyTargetTree.innerHTML = '';
+      Object.entries(tree).forEach(([protocol, views]) => {
+        const protocolBlock = document.createElement('div');
+        protocolBlock.className = 'space-y-2';
+        protocolBlock.innerHTML = `
+          <div class="text-sm font-semibold text-white">${protocol}</div>
+        `;
+        Object.entries(views).forEach(([view, receptors]) => {
+          const viewBlock = document.createElement('div');
+          viewBlock.className = 'ml-4 space-y-2';
+          viewBlock.innerHTML = `
+            <div class="text-xs font-medium text-gray-300">${view}</div>
+          `;
+          receptors.forEach(receptor => {
+            const item = document.createElement('label');
+            item.className = 'flex items-center justify-between gap-3 px-4 py-2 rounded-2xl bg-[#13131b] hover:bg-[#1f1f2b] cursor-pointer transition-all';
+            item.innerHTML = `
+              <span class="text-sm text-gray-200">${receptor}</span>
+              <input type="checkbox" value="${protocol}||${view}||${receptor}" class="h-4 w-4 text-purple-500 rounded border-gray-600 bg-[#0b0b0e]" />
+            `;
+            viewBlock.appendChild(item);
+          });
+          protocolBlock.appendChild(viewBlock);
+        });
+        applyTargetTree.appendChild(protocolBlock);
+      });
+    }
+
+    function closeApplyDropdown() {
+      if (applyDropdownMenu) applyDropdownMenu.classList.add('hidden');
+    }
+
+    // function openApplyDropdown() {
+    //   if (applyDropdownMenu) applyDropdownMenu.classList.toggle('hidden');
+    // }
+    
+    function openApplyDropdown() {
+    if (applyDropdownMenu) applyDropdownMenu.classList.remove('hidden');
+    }
+
+
+    function showApplyModal() {
+      if (!applyTargetModal) return;
+      buildApplyTargetTree();
+      selectedApplyMode = 'custom';
+      closeApplyDropdown();
+      applyTargetModal.classList.remove('hidden');
+    }
+
+    function hideApplyModal() {
+      if (!applyTargetModal) return;
+      applyTargetModal.classList.add('hidden');
+    }
+
+    function getCustomTargetSelection() {
+      if (!applyTargetTree) return [];
+      return Array.from(applyTargetTree.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-6 right-6 z-50 rounded-2xl bg-black/90 px-4 py-3 text-sm text-white shadow-2xl shadow-black/40';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2800);
+    }
+
+    function applyToSameView() {
+      if (!confirm('Apply current instruction to the same view? This will overwrite existing content for all receptors in the current view.')) return;
+      showToast('Applied to same view successfully.');
+      closeApplyDropdown();
+    }
+
+    function applyToSameProtocol() {
+      if (!confirm('Apply current instruction to the same protocol? This will overwrite existing content across all views and receptors in the current protocol.')) return;
+      showToast('Applied to same protocol successfully.');
+      closeApplyDropdown();
+    }
+
+    function applyToCustomTargets() {
+      const selectedTargets = getCustomTargetSelection();
+      if (selectedTargets.length === 0) {
+        alert('Please select at least one target before applying.');
+        return;
+      }
+      if (!confirm(`Apply current instruction to ${selectedTargets.length} selected target(s)? This will overwrite existing content.`)) return;
+      hideApplyModal();
+      showToast(`Applied to ${selectedTargets.length} custom target(s) successfully.`);
+    }
+
+    function initializeApplyControls() {
+      if (applyButton) {
+        applyButton.addEventListener('click', event => {
+          event.stopPropagation();
+          openApplyDropdown();
+        });
+      }
+      if (applyDropdownMenu) {
+        applyDropdownMenu.addEventListener('click', event => {
+            event.stopPropagation();   // ✅ 防止冒泡关闭
+          const button = event.target.closest('button[data-apply-mode]');
+          if (!button) return;
+          const mode = button.dataset.applyMode;
+          if (mode === 'sameView') {
+            applyToSameView();
+          } else if (mode === 'sameProtocol') {
+            applyToSameProtocol();
+          } else if (mode === 'custom') {
+            showApplyModal();
+          }
+        });
+      }
+      if (closeApplyModalBtn) closeApplyModalBtn.addEventListener('click', hideApplyModal);
+      if (cancelApplyModalBtn) cancelApplyModalBtn.addEventListener('click', hideApplyModal);
+      if (confirmApplyModalBtn) confirmApplyModalBtn.addEventListener('click', applyToCustomTargets);
+      if (selectAllTargetsBtn && applyTargetTree) {
+        selectAllTargetsBtn.addEventListener('click', () => {
+          applyTargetTree.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        });
+      }
+      document.addEventListener('click', event => {
+        const path = event.composedPath ? event.composedPath() : [event.target];
+        const clickedInsideWrapper = path.some(node => node && node.id === 'applyDropdownWrapper');
+        if (applyDropdownMenu && !clickedInsideWrapper) {
+          closeApplyDropdown();
+        }
+      });
     }
 
     function updateLanguageButtons() {
@@ -1140,7 +1487,9 @@
     }
 
     bindEvents();
+    initializeApplyControls();
     bindImageEvents();
+    bindRecordingEvents();
     renderInstructions();
     renderEditor();
     updateUIText();

@@ -398,33 +398,54 @@
                 <iconify-icon class="mr-2 text-purple-400" icon="solar:gallery-bold-duotone"></iconify-icon>
                 Guidance Illustration Configuration (Multi-Image Preview)
               </label>
-              <div class="flex space-x-2">
-                <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-[#2d2d3f] transition-all flex items-center">
-                  <iconify-icon class="mr-1.5 text-blue-400" icon="solar:server-bold-duotone"></iconify-icon>
-                  System Gallery
-                </button>
-                <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-[#2d2d3f] transition-all flex items-center">
-                  <iconify-icon class="mr-1.5 text-green-400" icon="solar:usb-bold-duotone"></iconify-icon>
-                  USB Upload
-                </button>
-              </div>
             </div>
-            <div class="grid grid-cols-4 gap-4">
-              <!-- Existing Image 1 -->
-              <div class="group relative aspect-video bg-[#1e1e2d] rounded-xl border border-purple-500/50 overflow-hidden shadow-lg shadow-purple-500/5">
-                <img alt="Patient chest positioning front view" class="w-full h-full object-cover" src="Chest PA.jpg">
+            <p class="text-xs text-gray-500">Note: Each instruction can only have one image.</p>
+            <div id="imageContainer" class="inline-block">
+            <!-- Empty State -->
+            <div id="imageEmptyState" class="w-[320px] h-[200px] flex flex-col items-center justify-center cursor-pointer bg-[#1e1e2d] rounded-lg border border-dashed border-[#2d2d3f] hover:border-purple-500/50 hover:bg-purple-600/5 transition-all">
+                <iconify-icon class="text-4xl mb-2 text-gray-500 hover:text-purple-400" icon="solar:camera-add-bold"></iconify-icon>
+                <span class="text-sm font-semibold text-gray-500 hover:text-purple-400">Add Image</span>
+            </div>
+            <!-- Filled State -->
+            <div id="imageFilledState" class="hidden flex flex-col items-start w-fit">
+            <!-- ✅ 图片（决定整体宽度） -->
+             <img id="instructionImage" class="block max-w-[320px] max-h-[200px] object-contain object-left rounded-lg border border-[#2d2d3f]" />
+            <!-- ✅ 按钮（和图片一模一样宽） -->
+             <div class="mt-2 flex justify-between w-full gap-2">
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 rounded text-white text-sm" id="replaceImageBtn">
+            <iconify-icon class="text-lg" icon="solar:refresh-bold"></iconify-icon>
+            <span>Replace</span>
+            </button>
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-red-600 hover:bg-red-700 rounded text-white text-sm" id="deleteImageBtn">
+            <iconify-icon class="text-lg" icon="solar:trash-bin-trash-bold"></iconify-icon>
+            <span>Delete</span>
+            </button>
+            </div>
+            </div>
+            </div>
+
+
+
+              <!-- Empty State -->
+               <!-- <div id="imageContainer" class="relative inline-block bg-[#1e1e2d] rounded-xl border-2 border-dashed border-[#2d2d3f] overflow-hidden shadow-lg">
+              <div id="imageEmptyState" class="w-full h-full flex flex-col items-center justify-center cursor-pointer group hover:border-purple-500/50 hover:bg-purple-600/5 transition-all">
+                <iconify-icon class="text-4xl mb-2 text-gray-500 group-hover:text-purple-400" icon="solar:camera-add-bold"></iconify-icon>
+                <span class="text-sm font-semibold text-gray-500 group-hover:text-purple-400">Add Image</span>
+              </div>
+              
+              <div id="imageFilledState" class="hidden w-full h-full relative group">
+                <img id="instructionImage" class="w-full h-full object-contain object-left" />
                 <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all space-x-3">
-                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-purple-400" icon="solar:eye-bold"></iconify-icon>
-                  <iconify-icon class="text-white text-xl cursor-pointer hover:text-red-500" icon="solar:trash-bin-trash-bold"></iconify-icon>
+                  <button type="button" class="p-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white" id="replaceImageBtn" title="Replace image">
+                    <iconify-icon class="text-2xl" icon="solar:refresh-bold"></iconify-icon>
+                  </button>
+                  <button type="button" class="p-2 bg-red-600 hover:bg-red-700 rounded-lg text-white" id="deleteImageBtn" title="Delete image">
+                    <iconify-icon class="text-2xl" icon="solar:trash-bin-trash-bold"></iconify-icon>
+                  </button>
                 </div>
-                <div class="absolute bottom-1 left-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[8px] text-white">Front Positioning Diagram</div>
               </div>
-              <!-- Upload Button -->
-              <button class="aspect-video bg-[#151520] border-2 border-dashed border-[#2d2d3f] rounded-xl flex flex-col items-center justify-center text-gray-600 hover:border-purple-500/50 hover:text-purple-400 transition-all">
-                <iconify-icon class="text-2xl mb-1" icon="solar:camera-add-bold"></iconify-icon>
-                <span class="text-[10px] font-bold uppercase tracking-widest">Add Image</span>
-              </button>
-            </div>
+            </div> -->
+            <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
           </div>
         </div>
       </div>
@@ -461,6 +482,11 @@
     const instructionNameInput = document.getElementById('instructionNameInput');
     const instructionDescriptionInput = document.getElementById('instructionDescriptionInput');
     const instructionCodeInput = document.getElementById('instructionCodeInput');
+    const imageFileInput = document.getElementById('imageFileInput');
+    const imageContainer = document.getElementById('imageContainer');
+    const imageEmptyState = document.getElementById('imageEmptyState');
+    const imageFilledState = document.getElementById('imageFilledState');
+    const instructionImage = document.getElementById('instructionImage');
 
     const languages = [
       { code: 'cn', label: 'Simplified Chinese (CN)' },
@@ -587,31 +613,36 @@
           id: '01', 
           titles: { cn: '请走到A点', us: 'Go to Point A', de: 'Gehen Sie zu Punkt A', fr: 'Allez au point A' },
           descriptions: { cn: '指导患者走到检查室的A点位置，准备进行胸部检查。请确保患者站立稳定，双脚分开与肩同宽。', us: 'Guide the patient to go to point A in the examination room, prepare for chest examination. Ensure the patient stands steadily with feet shoulder-width apart.', de: 'Führen Sie den Patienten zum Punkt A im Untersuchungszimmer, bereiten Sie sich auf die Brustuntersuchung vor. Stellen Sie sicher, dass der Patient stabil steht, mit den Füßen schulterbreit auseinander.', fr: 'Guidez le patient jusqu\'au point A dans la salle d\'examen, préparez-vous à l\'examen pulmonaire. Assurez-vous que le patient se tient fermement, les pieds écartés à la largeur des épaules.' },
-          duration: '00:03.4' 
+          duration: '00:03.4',
+          image: 'Chest PA.jpg'
         },
         { 
           id: '02', 
           titles: { cn: '请双手叉腰', us: 'Please Put Hands on Hips', de: 'Bitte Hände auf den Hüften', fr: 'Veuillez mettre les mains sur les hanches' },
           descriptions: { cn: '指导患者将双手放在腰部，保持身体挺直。这个姿势有助于展开肺部，确保获得最清晰的胸部影像。', us: 'Instruct the patient to place both hands on their hips, keeping the body straight. This posture helps expand the lungs and ensures the clearest chest image.', de: 'Weisen Sie den Patienten an, beide Hände auf die Hüften zu legen und den Körper gerade zu halten. Diese Haltung hilft, die Lungen zu erweitern und stellt das klarste Brustbild sicher.', fr: 'Demandez au patient de placer les deux mains sur les hanches, en gardant le corps droit. Cette posture aide à dilater les poumons et garantit l\'image thoracique la plus claire.' },
-          duration: '00:02.1' 
+          duration: '00:02.1',
+          image: null
         },
         { 
           id: '03', 
           titles: { cn: '请屏住呼吸', us: 'Please Hold Your Breath', de: 'Bitte halten Sie den Atem an', fr: 'Veuillez retenir votre respiration' },
           descriptions: { cn: '要求患者深吸一口气，然后屏住呼吸。屏住呼吸可以减少患者移动，获得更清晰的图像。通常需要屏住呼吸10秒左右。', us: 'Ask the patient to take a deep breath and hold it. Holding breath reduces patient movement and provides a clearer image. Usually need to hold breath for about 10 seconds.', de: 'Bitten Sie den Patienten, tief einzuatmen und den Atem anzuhalten. Das Anhalten des Atems reduziert die Bewegung des Patienten und liefert ein klareres Bild. Üblicherweise müssen Sie etwa 10 Sekunden lang den Atem anhalten.', fr: 'Demandez au patient de prendre une profonde inspiration et de retenir son souffle. Retenir son souffle réduit le mouvement du patient et fournit une image plus claire. Habituellement, vous devez retenir votre souffle pendant environ 10 secondes.' },
-          duration: '00:04.2' 
+          duration: '00:04.2',
+          image: null
         },
         { 
           id: '04', 
           titles: { cn: '可以呼吸了', us: 'You Can Breathe Now', de: 'Sie können jetzt atmen', fr: 'Vous pouvez maintenant respirer' },
           descriptions: { cn: '告知患者可以恢复正常呼吸。此时检查已经完成，患者可以放松身体。对患者进行检查完毕的确认。', us: 'Inform the patient they can resume normal breathing. The examination is now complete and the patient can relax. Confirm with the patient that the examination is finished.', de: 'Teilen Sie dem Patienten mit, dass er normal atmen kann. Die Untersuchung ist jetzt abgeschlossen und der Patient kann sich entspannen. Bestätigen Sie dem Patienten, dass die Untersuchung beendet ist.', fr: 'Informez le patient qu\'il peut reprendre sa respiration normale. L\'examen est maintenant terminé et le patient peut se détendre. Confirmez au patient que l\'examen est terminé.' },
-          duration: '00:01.8' 
+          duration: '00:01.8',
+          image: null
         },
         { 
           id: '05', 
           titles: { cn: '请离开检查室', us: 'Please Leave the Examination Room', de: 'Bitte verlassen Sie den Untersuchungsraum', fr: 'Veuillez quitter la salle d\'examen' },
           descriptions: { cn: '指导患者离开检查室。提醒患者检查已完成，感谢患者的配合。指引患者返回候诊区或其他指定区域。', us: 'Guide the patient to leave the examination room. Remind the patient the examination is complete and thank them for their cooperation. Direct the patient back to the waiting area or other designated area.', de: 'Führen Sie den Patienten aus dem Untersuchungsraum. Erinnern Sie den Patienten daran, dass die Untersuchung abgeschlossen ist, und danken Sie ihm für seine Zusammenarbeit. Leiten Sie den Patienten zurück in den Wartebereich oder einen anderen ausgewiesenen Bereich.', fr: 'Guidez le patient pour qu\'il quitte la salle d\'examen. Rappelez au patient que l\'examen est terminé et remerciez-le pour sa coopération. Dirigez le patient vers la salle d\'attente ou une autre zone désignée.' },
-          duration: '00:02.5' 
+          duration: '00:02.5',
+          image: null
         }
       ]
     };
@@ -660,6 +691,87 @@
       bindDragEvents();
     }
 
+    // Render image section based on current instruction's image state
+    function renderImageSection() {
+      const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+      if (!currentInstruction) return;
+
+      if (currentInstruction.image) {
+        // Show filled state
+        imageEmptyState.classList.add('hidden');
+        imageFilledState.classList.remove('hidden');
+        instructionImage.src = currentInstruction.image;
+      } else {
+        // Show empty state
+        imageEmptyState.classList.remove('hidden');
+        imageFilledState.classList.add('hidden');
+      }
+    }
+
+    // Handle image file selection (both add and replace)
+    function handleImageFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+        if (currentInstruction) {
+          currentInstruction.image = event.target.result;
+          renderImageSection();
+        }
+      };
+      reader.readAsDataURL(file);
+      
+      // Reset input so same file can be selected again
+      imageFileInput.value = '';
+    }
+
+    // Delete image from current instruction
+    function deleteImage() {
+      const currentInstruction = state.instructions.find(i => i.id === state.selectedInstructionId);
+      if (currentInstruction) {
+        currentInstruction.image = null;
+        renderImageSection();
+      }
+    }
+
+    // Bind event listeners for image management
+    function bindImageEvents() {
+      // Add image: click empty state
+      imageEmptyState.addEventListener('click', () => {
+        imageFileInput.click();
+      });
+
+      // Replace image: click filled state
+      imageFilledState.addEventListener('click', (e) => {
+        if (!e.target.closest('button')) {
+          imageFileInput.click();
+        }
+      });
+
+      // File input change handler
+      imageFileInput.addEventListener('change', handleImageFileSelect);
+
+      // Delete button
+      const deleteBtn = document.getElementById('deleteImageBtn');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteImage();
+        });
+      }
+
+      // Replace button
+      const replaceBtn = document.getElementById('replaceImageBtn');
+      if (replaceBtn) {
+        replaceBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          imageFileInput.click();
+        });
+      }
+    }
+
     function renderEditor() {
       const current = state.instructions.find(item => item.id === state.selectedInstructionId) || state.instructions[0];
       if (!current) return;
@@ -673,6 +785,7 @@
       languageNoteEl.textContent = `Selected voice language: ${languages.find(l => l.code === state.language).label}`;
       updateLanguageButtons();
       updateProtocolSelection();
+      renderImageSection();
     }
 
     function updateProtocolSelection() {
@@ -1027,6 +1140,7 @@
     }
 
     bindEvents();
+    bindImageEvents();
     renderInstructions();
     renderEditor();
     updateUIText();

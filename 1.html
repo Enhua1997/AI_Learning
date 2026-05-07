@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add Image Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .add-image {
+      border: 2px dashed #bbb;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 8px;
+      color: #444;
+      transition: border-color .15s, background .15s;
+      user-select: none;
+    }
+    .add-image.dragover {
+      border-color: #3b82f6;
+      background: rgba(59,130,246,0.05);
+    }
+    .add-image .hint { font-size: 14px; color: #666; margin-top: 6px; }
+    .preview { display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; }
+    .thumb {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      background: #f7f7f7;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .thumb .remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: bold;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>添加图片（点击或拖拽）</h2>
+
+  <div class="add-image" id="addImage">
+    <div style="font-size:18px; font-weight:600;">＋ Add Image</div>
+    <!-- <div class="hint">点击这里或把图片拖进来，从文件中选择图片（支持多选）</div> -->
+    <input id="imageInput" type="file" accept="image/*" multiple style="display:none" />
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+  <script>
+    const addEl = document.getElementById('addImage');
+    const inputEl = document.getElementById('imageInput');
+    const previewEl = document.getElementById('preview');
+
+    // 点击组件打开文件选择
+    addEl.addEventListener('click', () => inputEl.click());
+
+    // 处理 input 选择
+    inputEl.addEventListener('change', () => handleFiles(inputEl.files));
+
+    // 拖拽支持
+    addEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      addEl.classList.add('dragover');
+    });
+    addEl.addEventListener('dragleave', () => addEl.classList.remove('dragover'));
+    addEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      addEl.classList.remove('dragover');
+      if (e.dataTransfer && e.dataTransfer.files) {
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+
+    // 读取并显示图片
+    function handleFiles(fileList) {
+      const files = Array.from(fileList || []);
+      files.forEach(file => {
+        if (!file.type.startsWith('image/')) return; // 只处理图片
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'thumb';
+          wrapper.innerHTML = `
+            <img src="${ev.target.result}" alt="${escapeHtml(file.name)}" />
+            <button type="button" class="remove" title="删除">×</button>
+          `;
+          // 删除按钮
+          wrapper.querySelector('.remove').addEventListener('click', () => wrapper.remove());
+          previewEl.appendChild(wrapper);
+        };
+        reader.readAsDataURL(file);
+      });
+      // 清空 input 值以支持选择同一张图片（再次选择）
+      inputEl.value = '';
+    }
+
+    // 简单转义（用于 alt）
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+  </script>
+
+</body>
+</html>

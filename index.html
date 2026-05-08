@@ -71,6 +71,10 @@
     }
 
     #applyDropdownMenu {
+      position: fixed;
+      right: 2rem;
+      bottom: 5.5rem;
+      top: auto;
       display: none; /* default hidden, overridden when wrapper receives focus */
       opacity: 0;
       transform: translateY(-6px);
@@ -486,15 +490,26 @@
             After modification, please click Apply to sync to other Views under this Protocol.
           </p>
           <div class="relative" id="applyDropdownWrapper" tabindex="0" aria-haspopup="true" aria-expanded="false">
-            <button id="applyButton" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-2">
-              <iconify-icon class="text-lg" icon="solar:check-read-bold"></iconify-icon>
-              <span>Apply (Apply Sync)</span>
-              <iconify-icon class="text-lg" icon="solar:angle-down-bold"></iconify-icon>
+            <!-- 主按钮 + 下拉箭头 -->
+            <button id="applyButton" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-purple-600/20 transition-all transform active:scale-95 flex items-center space-x-3">
+              <span>Apply To</span>
+              <iconify-icon id="applyCaret" icon="solar:arrow-down-bold" class="transition-transform duration-200"></iconify-icon>
             </button>
-            <div id="applyDropdownMenu" class="hidden absolute right-0 top-full mt-2 w-64 bg-[#0b0b0e] border border-[#2d2d3f] rounded-3xl shadow-2xl shadow-black/30 overflow-hidden z-50">
-              <button type="button" data-apply-mode="sameView" class="w-full text-left px-4 py-3 text-gray-200 hover:bg-purple-500/10 transition-all">Apply to Same View</button>
-              <button type="button" data-apply-mode="sameProtocol" class="w-full text-left px-4 py-3 text-gray-200 hover:bg-purple-500/10 transition-all">Apply to Same Protocol</button>
-              <button type="button" data-apply-mode="custom" class="w-full text-left px-4 py-3 text-gray-200 hover:bg-purple-500/10 transition-all border-t border-[#2d2d3f]">Select Targets...</button>
+
+            <!-- 下拉菜单 -->
+            <div id="applyDropdownMenu" class="hidden right-0 mt-2 w-72 bg-[#0b0b0e] border border-[#2d2d3f] rounded-2xl shadow-2xl shadow-black/30 overflow-hidden z-50 py-2">
+              <button data-apply-mode="sameProtocol" class="w-full text-left px-4 py-3 hover:bg-[#13131b] transition-colors flex items-start gap-3">
+                <div class="flex-1">
+                  <div class="text-sm font-semibold text-white">Apply to Same Protocol</div>
+                  <div class="text-xs text-gray-400">Apply to current protocol • all views • same receptor</div>
+                </div>
+              </button>
+              <button data-apply-mode="custom" class="w-full text-left px-4 py-3 hover:bg-[#13131b] transition-colors flex items-start gap-3 border-t border-[#1f1f2b]">
+                <div class="flex-1">
+                  <div class="text-sm font-semibold text-white">Select Targets...</div>
+                  <div class="text-xs text-gray-400">Open modal to pick specific receptors</div>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -907,7 +922,7 @@
           // Create download link
           const link = document.createElement('a');
           link.href = audioUrl;
-          link.download = filename;W
+          link.download = filename;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -1213,7 +1228,15 @@
     }
 
     function closeApplyDropdown() {
-      if (applyDropdownMenu) applyDropdownMenu.classList.add('hidden');
+      if (applyDropdownMenu) {
+        applyDropdownMenu.classList.add('hidden');
+        applyDropdownMenu.style.display = 'none';
+        applyDropdownMenu.style.opacity = '0';
+        applyDropdownMenu.style.transform = 'translateY(-6px)';
+        applyDropdownMenu.style.pointerEvents = 'none';
+      }
+      const caret = document.getElementById('applyCaret');
+      if (caret) caret.style.transform = '';
     }
 
     // function openApplyDropdown() {
@@ -1221,7 +1244,20 @@
     // }
     
     function openApplyDropdown() {
-    if (applyDropdownMenu) applyDropdownMenu.classList.remove('hidden');
+      if (!applyDropdownMenu) return;
+      const caret = document.getElementById('applyCaret');
+      const computed = window.getComputedStyle(applyDropdownMenu);
+      const isHidden = computed.display === 'none' || applyDropdownMenu.classList.contains('hidden');
+      if (isHidden) {
+        applyDropdownMenu.classList.remove('hidden');
+        applyDropdownMenu.style.display = 'block';
+        applyDropdownMenu.style.opacity = '1';
+        applyDropdownMenu.style.transform = 'translateY(0)';
+        applyDropdownMenu.style.pointerEvents = 'auto';
+        if (caret) caret.style.transform = 'rotate(180deg)';
+      } else {
+        closeApplyDropdown();
+      }
     }
 
 
@@ -1283,7 +1319,7 @@
       }
       if (applyDropdownMenu) {
         applyDropdownMenu.addEventListener('click', event => {
-            event.stopPropagation();   // ✅ 防止冒泡关闭
+          event.stopPropagation();   // ✅ 防止冒泡关闭
           const button = event.target.closest('button[data-apply-mode]');
           if (!button) return;
           const mode = button.dataset.applyMode;
